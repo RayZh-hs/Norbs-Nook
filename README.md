@@ -12,6 +12,9 @@
 
 **Norb's Nook** :open_book: is part of a school project about building a Bookstore system using c++.
 
+- Links to recently required homework files:   
+[MainDesign.md](design/MainDesign.md)
+
 ---
 
 Made with :sparkling_heart: by Norb.
