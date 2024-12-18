@@ -1,1 +1,5 @@
-requirements.md
+cmake-build-debug/
+cmake-build-debug/*
+
+generated/data/*
+generated/logs/*
