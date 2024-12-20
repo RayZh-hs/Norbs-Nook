@@ -1,0 +1,56 @@
+#!/bin/bash
+
+clean_flag=false
+size_flag=false
+
+# Process command-line arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --clean|-c)
+            clean_flag=true
+            ;;
+        --size|-s)
+            size_flag=true
+            ;;
+        *)
+            test_cases+=("$1")
+            ;;
+    esac
+    shift
+done
+
+# Change to the build directory
+cd cmake-build-debug/ || exit 1  #Exit if cd fails
+
+
+# Clean *.metadata files ONLY before the first run if clean flag is set.
+if $clean_flag; then
+    find . -maxdepth 1 -name "*.testdata" -delete
+fi
+
+
+# Loop through test cases
+for input_file_base in "${test_cases[@]}"; do
+    input_file="../testpoints/${input_file_base}.in"
+
+    echo "Callback from test case $input_file_base:"
+    if [ ! -f "$input_file" ]; then
+        printf "\e[1;31m Error: Input file '%s' not found.\e[0m" "$input_file" >&2
+        exit 1
+    fi
+
+    printf "\e[0;32m"
+    sed 's/\/\/.*$//' "$input_file" | ./code
+    printf "\e[0m"
+done
+
+# Show sizes if size flag is set AFTER processing test cases
+if $size_flag; then
+    echo ""  # Add a blank line for separation
+    echo "Metadata file sizes:"
+    find . -maxdepth 1 -name "*.testdata" -printf "%s\t%p\n" | while IFS=$'\t' read -r size file; do
+        printf "\e[33m%s\e[0m\t%s\n" "$size" "$file"
+    done
+fi
+
+cd ..  # Go back to the parent directory
