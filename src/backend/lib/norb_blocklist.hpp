@@ -142,6 +142,20 @@ namespace norb {
                 // Conduct merging. Deprecated.
             }
 
+            // Returns whether a list is empty.
+            bool empty() const;
+
+            // Returns the number of elements within the list.
+            int size() const;
+
+            // Counts the number of occurrences for a key.
+            int count(const T_Key key) {
+                return find(key).size();
+            }
+
+            // Counts the number of occurrences for a key-val pair.
+            int count(const T_Key key, const T_Val val);
+
         private:
             static constexpr int npos = -1;
             static constexpr int global_size = sizeof(int);
