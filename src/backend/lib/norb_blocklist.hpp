@@ -76,7 +76,7 @@ namespace norb {
                 insertIntoBody(body, key, val, put_head->len);
                 ++(put_head->len);
                 body.write(f_body, put_head->pointer);
-                // TODO Test
+                // DONE Test
                 // FiledBlockBodyNode tmp;
                 // tmp.read(f_body, put_head->pointer);
                 if (put_head->len >= cell_break_threshold) {
@@ -242,7 +242,7 @@ namespace norb {
 
                 // The same write function but with an offset. Only those after offset (including itself) are written to the file.
                 void write(std::fstream &f, const int serial, const int offset) {
-                    // TODO Major changes in this block of code!
+                    // DONE Major changes in this block of code!
                     f.seekg(getBodyOffset(serial), std::ios::beg);
                     for (int i = offset; i < cell_break_threshold; i++)
                         utils::bWrite(f, name[i]);
