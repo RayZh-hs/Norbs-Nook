@@ -5,7 +5,14 @@
 #ifndef BOOKKEEPER_HPP
 #define BOOKKEEPER_HPP
 
+enum filter_types {
+    isbn, name, author
+};
 
+class Filter {
+public:
+
+};
 
 class bookkeeper {
 

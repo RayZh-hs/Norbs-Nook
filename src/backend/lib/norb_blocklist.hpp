@@ -18,7 +18,8 @@ namespace norb {
         int _filed_block_list_counter = 0;
 
         // A Block List implementation based on disk allocation. All operations are $O(\sqrt{n})$.
-        template<typename T_Key, typename T_Val, const Bounds<T_Key> &key_bounds_, const Bounds<T_Val> &val_bounds_>
+        // template<typename T_Key, typename T_Val, const Bounds<T_Key> &key_bounds_, const Bounds<T_Val> &val_bounds_>
+        template<typename T_Key, typename T_Val>
         class FiledBlockList {
         public:
             // static constexpr int cell_size = 320;
@@ -84,7 +85,7 @@ namespace norb {
 
             // Returns all entries through the given key, in ascending order.
             std::vector<T_Val> find(const T_Key key) {
-                auto cur_head = seekHead(key, val_bounds_.minor_neg_inf);
+                auto cur_head = seekHead(key, Bounds<T_Val>::minor_neg_inf);
                 bool pass_on = true; // pass on to the next round
                 std::vector<T_Val> ret;
                 while (pass_on && cur_head != head.end()) {
@@ -160,10 +161,10 @@ namespace norb {
                     // memset(key_max, '~', sizeof(key_max));
                     // key_max[limit_str_len - 1] = '\0';
                     // ! Warn here ! Untested bounds system !
-                    key_min = key_bounds_.neg_inf;
-                    key_max = key_bounds_.pos_inf;
-                    key_min_val = val_bounds_.neg_inf;
-                    key_max_val = val_bounds_.pos_inf;
+                    key_min     = Bounds<T_Key>::neg_inf;
+                    key_max     = Bounds<T_Key>::pos_inf;
+                    key_min_val = Bounds<T_Val>::neg_inf;
+                    key_max_val = Bounds<T_Val>::pos_inf;
                 }
             };
 
@@ -345,7 +346,7 @@ namespace norb {
         };
 
         // Explicit instantiation.
-        template class FiledBlockList<norb::string<10>, int, bounds::str_bounds<10>, bounds::int_bounds>;
-        template class FiledBlockList<int, norb::string<10>, bounds::int_bounds, bounds::str_bounds<10> >;
+        template class FiledBlockList<norb::string<10>, int>;
+        template class FiledBlockList<int, norb::string<10>>;
     }
 }

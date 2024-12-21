@@ -7,22 +7,43 @@
 
 namespace norb {
     // A wrapper for common bounding systems (i.e. inf and -inf)
-    template <typename T_>
+    template<typename T_>
     struct Bounds {
-        T_ neg_inf;
-        T_ pos_inf;
-        T_ minor_neg_inf;
-        T_ minor_pos_inf;
+        static T_ neg_inf;
+        static T_ pos_inf;
+        static T_ minor_neg_inf;
+        static T_ minor_pos_inf;
     };
 
-    // Bounds for commonly used objects
-    namespace bounds {
-        Bounds<int> int_bounds {std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), std::numeric_limits<int>::min() / 2, std::numeric_limits<int>::max() / 2};
-        Bounds<lld> lld_bounds {std::numeric_limits<lld>::min(), std::numeric_limits<lld>::max(), std::numeric_limits<lld>::min() / 2, std::numeric_limits<lld>::max() / 2};
-        // The bounds for norb::string is generated dynamically according to the length of the string.
-        template <int len>
-        Bounds<norb::string<len>> str_bounds {norb::string<len>::fill_string('\0'), norb::string<len>::fill_string('~'), norb::string<len>::fill_string('!'), norb::string<len>::fill_string('}')};
-    }
+    template<int len>
+    struct Bounds<norb::string<len> > {
+        static norb::string<len> neg_inf;
+        static norb::string<len> pos_inf;
+        static norb::string<len> minor_neg_inf;
+        static norb::string<len> minor_pos_inf;
+    };
+
+    template<int len>
+    norb::string<len> Bounds<norb::string<len> >::neg_inf = norb::string<len>::fill_string('\0');
+    template<int len>
+    norb::string<len> Bounds<norb::string<len> >::pos_inf = norb::string<len>::fill_string('~');
+    template<int len>
+    norb::string<len> Bounds<norb::string<len> >::minor_neg_inf = norb::string<len>::fill_string('!');
+    template<int len>
+    norb::string<len> Bounds<norb::string<len> >::minor_pos_inf = norb::string<len>::fill_string('}');
+
+    template <>
+    struct Bounds<int> {
+        static int neg_inf;
+        static int pos_inf;
+        static int minor_neg_inf;
+        static int minor_pos_inf;
+    };
+
+    int Bounds<int>::neg_inf = std::numeric_limits<int>::lowest();
+    int Bounds<int>::pos_inf = std::numeric_limits<int>::max();
+    int Bounds<int>::minor_neg_inf = std::numeric_limits<int>::lowest() + 1;
+    int Bounds<int>::minor_pos_inf = std::numeric_limits<int>::max() - 1;
 
 }
 
