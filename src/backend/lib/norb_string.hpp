@@ -66,6 +66,22 @@ namespace norb {
         }
         return ans;
     }
+
+    inline lld hash(const char* str) {
+        lld ans = 0;
+        for (auto i = str; (*i) != '\0'; i++) {
+            ans = (ans * norb_constants_hash_mul + (*i) - norb_constants_hash_offset) % norb_constants_hash_mod;
+        }
+        return ans;
+    }
+
+    inline lld hash(const std::string &str) {
+        lld ans = 0;
+        for (const auto i : str) {
+            ans = (ans * norb_constants_hash_mul + i - norb_constants_hash_offset) % norb_constants_hash_mod;
+        }
+        return ans;
+    }
 }
 
 #endif //NORB_STRING_HPP
