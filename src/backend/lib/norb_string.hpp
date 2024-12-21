@@ -8,6 +8,10 @@
 #include <array>
 #include <cstring>
 
+#include "constants.hpp"
+#include "norb_blocklist.hpp"
+#include "norb_alias.hpp"
+
 namespace norb {
     template <int max_len>
         class string : public std::array<char, max_len> {
@@ -41,7 +45,27 @@ namespace norb {
             }
             return os;
         }
+
+        friend std::istream &operator >> (std::istream &is, const string &str) {
+            std::string str_beta;
+            is >> str_beta;
+            str(str_beta);
+            return is;
+        }
     };
+
+    constexpr lld norb_constants_hash_offset = 0;
+    constexpr lld norb_constants_hash_mul = 1007;
+    constexpr lld norb_constants_hash_mod = 1E9 + 7;
+
+    template <int len>
+    lld hash(const string<len> str) {
+        lld ans = 0;
+        for (auto i : str) {
+            ans = (ans * norb_constants_hash_mul + i - norb_constants_hash_offset) % norb_constants_hash_mod;
+        }
+        return ans;
+    }
 }
 
 #endif //NORB_STRING_HPP
