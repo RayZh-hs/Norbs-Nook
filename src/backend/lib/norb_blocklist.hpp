@@ -160,6 +160,7 @@ namespace norb {
             }
 
             // Counts the number of occurrences for a key-val pair.
+            // TODO Needs testing.
             int count(const T_Key key, const T_Val val) {
                 auto cur_head = seekHead(key, Bounds<T_Val>::minor_neg_inf);
                 bool pass_on = true; // pass on to the next round
@@ -173,7 +174,8 @@ namespace norb {
                         // if (strcmp(key, body.name[i]) == 0) {
                         if (key == body.name[i]) {
                             found_in_cycle = true;
-                            ret++;
+                            if (val == body.val[i])
+                                ret++;
                         } else if (found_in_cycle) {
                             // This means that the entire span has been covered. We directly return ret.
                             return ret;
