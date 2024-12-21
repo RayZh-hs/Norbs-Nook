@@ -68,6 +68,7 @@ namespace norb {
 
             // Inserts a new object into the list.
             void insert(const T_Key key, const T_Val val) {
+                item_count++;
                 auto put_head = seekHead(key, val);
                 FiledBlockBodyNode body;
                 body.read(f_body, put_head->pointer);
@@ -137,16 +138,21 @@ namespace norb {
                 }
                 // Update the length in head.
                 --(cur_head->len);
+                item_count--;
                 // Write the block back to disk.
                 body.write(f_body, cur_head->pointer);
                 // Conduct merging. Deprecated.
             }
 
             // Returns whether a list is empty.
-            bool empty() const;
+            bool empty() const {
+                return item_count == 0;
+            }
 
             // Returns the number of elements within the list.
-            int size() const;
+            int size() const {
+                return item_count;
+            }
 
             // Counts the number of occurrences for a key.
             int count(const T_Key key) {
@@ -154,11 +160,37 @@ namespace norb {
             }
 
             // Counts the number of occurrences for a key-val pair.
-            int count(const T_Key key, const T_Val val);
+            int count(const T_Key key, const T_Val val) {
+                auto cur_head = seekHead(key, Bounds<T_Val>::minor_neg_inf);
+                bool pass_on = true; // pass on to the next round
+                int ret = 0;
+                while (pass_on && cur_head != head.end()) {
+                    pass_on = false;
+                    bool found_in_cycle = false;
+                    FiledBlockBodyNode body;
+                    body.read(f_body, cur_head->pointer);
+                    for (int i = 0; i < cur_head->len; i++) {
+                        // if (strcmp(key, body.name[i]) == 0) {
+                        if (key == body.name[i]) {
+                            found_in_cycle = true;
+                            ret++;
+                        } else if (found_in_cycle) {
+                            // This means that the entire span has been covered. We directly return ret.
+                            return ret;
+                        }
+                    }
+                    // If found in cycle but hasn't yet returned, we must traverse the next node.
+                    ++cur_head;
+                    if (cur_head != head.end()) {
+                        pass_on = true;
+                    }
+                }
+                return ret;
+            }
 
         private:
             static constexpr int npos = -1;
-            static constexpr int global_size = sizeof(int);
+            static constexpr int global_size = sizeof(int) * 2;
 
             // Structure for storing a single chain head. Acts like a node for a chained list.
             struct FiledBlockHeadNode {
@@ -234,6 +266,7 @@ namespace norb {
             std::fstream &f_global;
             int f_global_id;
             int body_count = 0;
+            int item_count = 0;
             head_list head{};
 
             // Converts serial number of a body node to its offset relative to the beginning of the file.
@@ -251,6 +284,7 @@ namespace norb {
                 assert(f_global.good());
                 // Revised: This is used to read sequentially the global data from the file.
                 utils::bRead(f_global, body_count);
+                utils::bRead(f_global, item_count);
                 assert(f_global.good());
             }
 
@@ -262,6 +296,7 @@ namespace norb {
                 // Revised: This is used to ensure that the sequence of destruction does not affect the system.
                 // The pointer will be stepped forward.
                 utils::bWrite(f_global, body_count);
+                utils::bWrite(f_global, item_count);
             }
 
             // Loads the head from the disk.

@@ -14,6 +14,7 @@ int main() {
     norb::algo::FiledBlockList<int, norb::string<10>> block_list_1("head1.testdata", "body1.testdata", f_global);
     norb::algo::FiledBlockList<int, int> block_list_2("head2.testdata", "body2.testdata", f_global);
     // block_list_1.insert(1, norb::string<10>("1"));
+    std::cout << block_list_1.size() << '\n';
     // block_list_1.insert(1, norb::string<10>("2"));
     // block_list_1.insert(1, norb::string<10>("3"));
     // block_list_1.insert(5, norb::string<10>("1"));
@@ -24,9 +25,10 @@ int main() {
     // block_list_2.insert(0, 4);
     // block_list_2.insert(0, 6);
     // block_list_2.insert(0, 8);
-    block_list_1.insert(1, "another?");
+    block_list_1.del(1, "another?");
     std::cout << block_list_1.find(1) << '\n';
     auto p = block_list_2.find(0);
+    std::cout << block_list_1.size() << '\n';
     std::cout << p << '\n';
     return 0;
 }
