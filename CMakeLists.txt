@@ -17,9 +17,9 @@ set(COMMON_DEPENDENCIES
         src/backend/account.cpp
         src/backend/lib/norb_blocklist_init.cpp
 #        src/backend/account.hpp
-#        src/backend/bookkeeper.cpp
+        src/backend/bookkeeper.cpp
 #        src/backend/bookkeeper.hpp
-#        src/backend/logging.cpp
+        src/backend/logging.cpp
 #        src/backend/logging.hpp
 #        src/backend/lib/norb_blocklist.hpp
 #        src/backend/lib/norb_utils.hpp
