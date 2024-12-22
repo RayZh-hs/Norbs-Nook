@@ -1,5 +1,5 @@
-#ifndef NORB_NAIVELIST_HPP
-#define NORB_NAIVELIST_HPP
+#pragma once
+
 #include <string>
 #include <exception>
 #include "norb_utils.hpp"
@@ -80,5 +80,3 @@ namespace norb {
         };
     }
 }
-
-#endif //NORB_NAIVELIST_HPP

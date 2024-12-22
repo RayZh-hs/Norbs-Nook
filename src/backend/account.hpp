@@ -1,5 +1,4 @@
-#ifndef ACCOUNT_HPP
-#define ACCOUNT_HPP
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -112,6 +111,3 @@ namespace norb {
         int GetCurPrivilege() const;
     };
 }
-
-
-#endif //ACCOUNT_HPP
