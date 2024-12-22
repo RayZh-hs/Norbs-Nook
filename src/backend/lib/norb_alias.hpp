@@ -1,5 +1,4 @@
-#ifndef NORB_ALIAS_HP
-#define NORB_ALIAS_HP
+#pragma once
 
 #include "norb_utils.hpp"
 
@@ -9,5 +8,3 @@ namespace norb {
 
 // Usings to make life easier.
 using norb::utils::operator<<;
-
-#endif //NORB_ALIAS_HP

@@ -26,6 +26,10 @@ set(COMMON_DEPENDENCIES
         src/backend/lib/norb_bounds.hpp
         src/backend/lib/norb_alias.hpp
         src/backend/lib/norb_naivelist.hpp
+        src/backend/lib/norb_utils.tpp
+        src/backend/lib/norb_bounds.tpp
+        src/backend/lib/norb_blocklist.tpp
+        src/backend/lib/norb_string.tpp
 )
 
 # Iterate over each test source file and create a corresponding executable
