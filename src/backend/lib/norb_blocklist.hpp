@@ -50,7 +50,7 @@ namespace norb {
             int count(const T_Key key);
 
             // Counts the number of occurrences for a key-val pair.
-            // TODO Needs testing.
+            // DONE Needs testing.
             int count(const T_Key key, const T_Val val);
 
         private:

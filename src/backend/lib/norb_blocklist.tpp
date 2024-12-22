@@ -154,7 +154,7 @@ namespace norb {
         }
 
         // Counts the number of occurrences for a key-val pair.
-        // TODO Needs testing.
+        // DONE Needs testing.
         template<typename T_Key, typename T_Val>
         int FiledBlockList<T_Key, T_Val>::count(const T_Key key, const T_Val val) {
             auto cur_head = seekHead(key);
