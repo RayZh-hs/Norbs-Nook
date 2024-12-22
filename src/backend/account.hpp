@@ -55,7 +55,7 @@ namespace norb {
     public:
         AccountManager(const std::string &f_head_name, const std::string &f_body_name,
                        std::reference_wrapper<std::fstream> f_global) {
-            std::make_unique<account_list_t_>(f_head_name, f_body_name, f_global);
+            account_list = std::make_unique<account_list_t_>(f_head_name, f_body_name, f_global);
             if (account_list->empty()) {
                 // Create the root account.
                 // TODO What's the username of root ?
