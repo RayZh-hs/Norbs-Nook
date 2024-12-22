@@ -51,17 +51,6 @@ namespace norb {
         int privilege = 0;
     };
 
-    // Claim a Bounds object for Account:
-    extern template struct Bounds<Account>;
-
-    template <>
-    struct Bounds<Account> {
-        static Account neg_inf;
-        static Account pos_inf;
-        static Account minor_neg_inf;
-        static Account minor_pos_inf;
-    };
-
     class AccountManager {
     public:
         AccountManager(const std::string &f_head_name, const std::string &f_body_name,

@@ -76,7 +76,7 @@ namespace norb {
         // Returns all entries through the given key, in ascending order.
         template<typename T_Key, typename T_Val>
         std::vector<T_Val> FiledBlockList<T_Key, T_Val>::find(const T_Key key) {
-            auto cur_head = seekHead(key, Bounds<T_Val>::minor_neg_inf);
+            auto cur_head = seekHead(key);
             bool pass_on = true; // pass on to the next round
             std::vector<T_Val> ret;
             while (pass_on && cur_head != head.end()) {
@@ -157,7 +157,7 @@ namespace norb {
         // TODO Needs testing.
         template<typename T_Key, typename T_Val>
         int FiledBlockList<T_Key, T_Val>::count(const T_Key key, const T_Val val) {
-            auto cur_head = seekHead(key, Bounds<T_Val>::minor_neg_inf);
+            auto cur_head = seekHead(key);
             bool pass_on = true; // pass on to the next round
             int ret = 0;
             while (pass_on && cur_head != head.end()) {
@@ -196,10 +196,10 @@ namespace norb {
             //// memset(key_min, '\0', sizeof(key_min));
             // memset(key_max, '~', sizeof(key_max));
             // key_max[limit_str_len - 1] = '\0';
-            key_min = Bounds<T_Key>::neg_inf;
-            key_max = Bounds<T_Key>::pos_inf;
-            key_min_val = Bounds<T_Val>::neg_inf;
-            key_max_val = Bounds<T_Val>::pos_inf;
+            key_min     = {};
+            key_max     = {};
+            key_min_val = {};
+            key_max_val = {};
         }
 
         // Fetches a body node from the disk.
@@ -307,16 +307,25 @@ namespace norb {
         template<typename T_Key, typename T_Val>
         typename FiledBlockList<T_Key, T_Val>::head_list::iterator FiledBlockList<T_Key, T_Val>::seekHead(const T_Key key, const T_Val val) {
             for (auto iter = head.begin(); iter != head.end(); ++iter) {
-                if (utils::ascend(iter->key_min, key, iter->key_max)) {
-                    // if (strcmp(iter->key_min, key) == 0 && iter->key_min_val > val) {
-                    if (iter->key_min == key && iter->key_min_val > val) {
-                        continue;
-                    }
-                    // if (strcmp(iter->key_max, key) == 0 && iter->key_max_val < val) {
-                    if (iter->key_max == key && iter->key_max_val <= val) {
-                        continue;
-                    }
-                    // Find the node that accommodates the given (key, val) pair.
+                auto iter_cp = iter;
+                const bool within_left  = (iter == head.begin())    || (iter->key_min < key || (iter->key_min == key && iter->key_min_val <= val));
+                const bool within_right = (++iter_cp == head.end()) || (iter->key_max > key || (iter->key_max == key && iter->key_max_val >  val));
+                if (within_left && within_right) {
+                    return iter;
+                }
+            }
+            // This means that the corresponding pair cannot be inserted into the list.
+            return head.end();
+        }
+
+        // Find the head with the earliest appearance of key, or where key should be inserted if it does not exist.
+        template<typename T_Key, typename T_Val>
+        typename FiledBlockList<T_Key, T_Val>::head_list::iterator FiledBlockList<T_Key, T_Val>::seekHead(const T_Key key) {
+            for (auto iter = head.begin(); iter != head.end(); ++iter) {
+                auto iter_cp = iter;
+                const bool within_left  = (iter == head.begin())    || (iter->key_min <= key);
+                const bool within_right = (++iter_cp == head.end()) || (iter->key_max >= key);
+                if (within_left && within_right) {
                     return iter;
                 }
             }

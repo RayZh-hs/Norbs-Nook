@@ -1,13 +1,6 @@
 #include "account.hpp"
 
 namespace norb {
-
-    // TODO: Does this work ?
-    Account Bounds<Account>::neg_inf        = {(Bounds<string<account_userid_len>>::neg_inf      ), {}, {}, {}};
-    Account Bounds<Account>::pos_inf        = {(Bounds<string<account_userid_len>>::pos_inf      ), {}, {}, {}};
-    Account Bounds<Account>::minor_neg_inf  = {(Bounds<string<account_userid_len>>::minor_neg_inf), {}, {}, {}};
-    Account Bounds<Account>::minor_pos_inf  = {(Bounds<string<account_userid_len>>::minor_pos_inf), {}, {}, {}};
-
     int AccountManager::AccountSize() const {
         return account_list->size();
     }
@@ -92,7 +85,7 @@ namespace norb {
         Account new_account(old_account);
         new_account.hashed_password = new_hashed_password;
         // First fix all passwords in the login_stack.
-        for (auto &i : login_stack) {
+        for (auto &i: login_stack) {
             if (hash(i.userid) == hashed_userid) {
                 i.hashed_password = new_hashed_password;
             }
@@ -103,7 +96,8 @@ namespace norb {
         return true;
     }
 
-    bool AccountManager::UserAdd(const std::string &userid, const std::string &password, const int privilege, const std::string &username) {
+    bool AccountManager::UserAdd(const std::string &userid, const std::string &password, const int privilege,
+                                 const std::string &username) {
         if (GetCurPrivilege() <= privilege) {
             return false;
         }
@@ -125,7 +119,7 @@ namespace norb {
         }
         assert(found.size() == 1);
         const Account account = found[0];
-        for (auto &i : login_stack) {
+        for (auto &i: login_stack) {
             if (i.userid == string<account_userid_len>(userid)) {
                 return false;
             }

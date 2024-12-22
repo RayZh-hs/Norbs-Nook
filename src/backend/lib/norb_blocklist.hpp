@@ -6,7 +6,7 @@
 #include <list>
 #include <functional>
 
-#include "norb_bounds.hpp"
+// #include "norb_bounds.hpp"
 #include "norb_string.hpp"
 #include "norb_utils.hpp"
 
@@ -14,7 +14,7 @@
 namespace norb {
     // Classes and functions directly related to algorithms.
     namespace algo {
-        int _filed_block_list_counter = 0;
+        extern int _filed_block_list_counter;
 
         // A Block List implementation based on disk allocation. All operations are $O(\sqrt{n})$.
         // template<typename T_Key, typename T_Val, const Bounds<T_Key> &key_bounds_, const Bounds<T_Val> &val_bounds_>
@@ -117,6 +117,9 @@ namespace norb {
 
             // Find the head into which the new pair should be inserted into.
             typename head_list::iterator seekHead(T_Key key, T_Val val);
+
+            // Find the head with the earliest appearance of key, or where key should be inserted if it does not exist.
+            typename head_list::iterator seekHead(T_Key key);
 
             // Split a cell that has reached cell_break_threshold.
             void splitCell(typename head_list::iterator iter, FiledBlockBodyNode &original_body_node);
