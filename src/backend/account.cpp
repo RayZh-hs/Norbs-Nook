@@ -1,6 +1,13 @@
 #include "account.hpp"
 
 namespace norb {
+
+    // TODO: Does this work ?
+    Account Bounds<Account>::neg_inf        = {(Bounds<string<account_userid_len>>::neg_inf      ), {}, {}, {}};
+    Account Bounds<Account>::pos_inf        = {(Bounds<string<account_userid_len>>::pos_inf      ), {}, {}, {}};
+    Account Bounds<Account>::minor_neg_inf  = {(Bounds<string<account_userid_len>>::minor_neg_inf), {}, {}, {}};
+    Account Bounds<Account>::minor_pos_inf  = {(Bounds<string<account_userid_len>>::minor_pos_inf), {}, {}, {}};
+
     int AccountManager::AccountSize() const {
         return account_list->size();
     }

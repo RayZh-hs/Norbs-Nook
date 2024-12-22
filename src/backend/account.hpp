@@ -52,6 +52,8 @@ namespace norb {
     };
 
     // Claim a Bounds object for Account:
+    extern template struct Bounds<Account>;
+
     template <>
     struct Bounds<Account> {
         static Account neg_inf;
@@ -59,11 +61,6 @@ namespace norb {
         static Account minor_neg_inf;
         static Account minor_pos_inf;
     };
-    // TODO: Does this work ?
-    Account Bounds<Account>::neg_inf        = {(Bounds<string<account_userid_len>>::neg_inf      ), {}, {}, {}};
-    Account Bounds<Account>::pos_inf        = {(Bounds<string<account_userid_len>>::pos_inf      ), {}, {}, {}};
-    Account Bounds<Account>::minor_neg_inf  = {(Bounds<string<account_userid_len>>::minor_neg_inf), {}, {}, {}};
-    Account Bounds<Account>::minor_pos_inf  = {(Bounds<string<account_userid_len>>::minor_pos_inf), {}, {}, {}};
 
     class AccountManager {
     public:
