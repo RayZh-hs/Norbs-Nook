@@ -9,7 +9,6 @@
 #include <cstring>
 
 #include "constants.hpp"
-#include "norb_blocklist.hpp"
 #include "norb_alias.hpp"
 
 namespace norb {

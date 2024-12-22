@@ -1,6 +1,6 @@
 // ReSharper disable CppNonInlineFunctionDefinitionInHeaderFile
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <fstream>
 #include <cassert>
@@ -91,4 +91,4 @@ namespace norb {
     }
 }
 
-#endif //UTILS_H
+#endif //UTILS_HPP

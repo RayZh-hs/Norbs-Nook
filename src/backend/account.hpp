@@ -6,6 +6,7 @@
 
 #include "constants.hpp"
 #include "norb_string.hpp"
+#include "norb_blocklist.hpp"
 
 // The using namespace here only imports such constants that the file needs, and thus is justified.
 using namespace norb::norbs_nook_constants::account_constants;
@@ -15,12 +16,32 @@ namespace norb {
     public:
         Account() = default;
 
-        Account(const std::string &userid, const std::string &password, const std::string &username,
+        Account(const string<account_userid_len> &userid, const std::string &password, const std::string &username,
                 const int privilege)
             : userid(userid), hashed_password(hash(password)), username(username), privilege(privilege) {
         }
 
         ~Account() = default;
+
+        bool operator == (Account other) const {
+            return userid == other.userid;
+        }
+
+        bool operator < (Account other) const {
+            return userid < other.userid;
+        }
+
+        bool operator > (Account other) const {
+            return userid > other.userid;
+        }
+
+        bool operator <= (Account other) const {
+            return userid <= other.userid;
+        }
+
+        bool operator >= (Account other) const {
+            return userid >= other.userid;
+        }
 
         string<account_userid_len> userid{};
         // string<account_password_len> password{};
@@ -29,6 +50,20 @@ namespace norb {
         string<account_username_len> username{};
         int privilege = 0;
     };
+
+    // Claim a Bounds object for Account:
+    template <>
+    struct Bounds<Account> {
+        static Account neg_inf;
+        static Account pos_inf;
+        static Account minor_neg_inf;
+        static Account minor_pos_inf;
+    };
+    // TODO: Does this work ?
+    Account Bounds<Account>::neg_inf        = {(Bounds<string<account_userid_len>>::neg_inf      ), {}, {}, {}};
+    Account Bounds<Account>::pos_inf        = {(Bounds<string<account_userid_len>>::pos_inf      ), {}, {}, {}};
+    Account Bounds<Account>::minor_neg_inf  = {(Bounds<string<account_userid_len>>::minor_neg_inf), {}, {}, {}};
+    Account Bounds<Account>::minor_pos_inf  = {(Bounds<string<account_userid_len>>::minor_pos_inf), {}, {}, {}};
 
     class AccountManager {
     public:
@@ -74,7 +109,7 @@ namespace norb {
         bool ChangePassword(const std::string &userid, const std::string &new_password, const std::string &current_password = "");
 
         // Add a user to the system. Returns whether the operation is successful.
-        bool UserAdd(const std::string &userid, const std::string &password, const int privilege, const std::string &username);
+        bool UserAdd(const std::string &userid, const std::string &password, int privilege, const std::string &username);
 
         // Delete a user. Returns whether the operation is successful.
         bool Delete(const std::string &userid);
