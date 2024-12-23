@@ -6,9 +6,8 @@
 #include <list>
 #include <functional>
 
-// #include "norb_bounds.hpp"
-#include "norb_string.hpp"
-#include "norb_utils.hpp"
+// #include "norb_string.hpp"
+// #include "norb_utils.hpp"
 
 // Namespace norb for Norb.
 namespace norb {
@@ -32,13 +31,13 @@ namespace norb {
             ~FiledBlockList();
 
             // Inserts a new object into the list.
-            void insert(const T_Key key, const T_Val val);
+            void insert(T_Key key, T_Val val);
 
             // Returns all entries through the given key, in ascending order.
-            std::vector<T_Val> find(const T_Key key);
+            std::vector<T_Val> find(T_Key key);
 
             // Deletes a (entry, key) pair, if it exists.
-            void del(const T_Key key, const T_Val val);
+            void del(T_Key key, T_Val val);
 
             // Returns whether a list is empty.
             bool empty() const;
@@ -47,11 +46,13 @@ namespace norb {
             int size() const;
 
             // Counts the number of occurrences for a key.
-            int count(const T_Key key);
+            int count(T_Key key);
 
             // Counts the number of occurrences for a key-val pair.
             // DONE Needs testing.
-            int count(const T_Key key, const T_Val val);
+            int count(T_Key key, T_Val val);
+
+            std::vector<T_Val> valAsVector();
 
         private:
             static constexpr int npos = -1;
@@ -80,13 +81,13 @@ namespace norb {
                 T_Val val[cell_break_threshold]{};
 
                 // Fetches a body node from the disk.
-                void read(std::fstream &f, const int serial);
+                void read(std::fstream &f, int serial);
 
                 // Writes the body node into the disk, overwriting old version if it exists.
-                void write(std::fstream &f, const int serial);
+                void write(std::fstream &f, int serial);
 
                 // The same write function but with an offset. Only those after offset (including itself) are written to the file.
-                void write(std::fstream &f, const int serial, const int offset);
+                void write(std::fstream &f, int serial, int offset);
             };
 
             static constexpr auto file_open_mode = std::ios::binary | std::ios::in | std::ios::out;
