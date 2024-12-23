@@ -23,6 +23,10 @@ namespace norb {
 
         template <int N>
         friend std::istream &operator >> (std::istream &is, string<N> &str);
+
+        [[nodiscard]] std::vector<std::string> split (char separator) const;
+
+        [[nodiscard]] std::vector<lld> split_and_hash(char separator) const;
     };
 
     constexpr lld norb_constants_hash_offset = 0;

@@ -43,6 +43,44 @@ namespace norb {
         return is;
     }
 
+    template<int max_len>
+    std::vector<std::string> string<max_len>::split(char separator) const {
+        std::vector<std::string> ret;
+        std::string s;
+        for (auto i : *this) {
+            if (i == '\0') {
+                ret.push_back(s);
+                break;
+            }
+            if (i == separator) {
+                ret.push_back(s);
+                s.clear();
+                continue;
+            }
+            s += i;
+        }
+        return ret;
+    }
+
+    template<int max_len>
+    std::vector<lld> string<max_len>::split_and_hash(char separator) const {
+        std::vector<lld> ret;
+        std::string s;
+        for (auto i : *this) {
+            if (i == '\0') {
+                ret.push_back(hash(s));
+                break;
+            }
+            if (i == separator) {
+                ret.push_back(hash(s));
+                s.clear();
+                continue;
+            }
+            s += i;
+        }
+        return ret;
+    }
+
     template<int len>
     lld hash(const string<len> str) {
         lld ans = 0;
