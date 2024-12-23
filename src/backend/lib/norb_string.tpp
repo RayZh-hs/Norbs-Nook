@@ -47,6 +47,8 @@ namespace norb {
     lld hash(const string<len> str) {
         lld ans = 0;
         for (auto i: str) {
+            if (i == '\0')
+                break;
             ans = (ans * norb_constants_hash_mul + i - norb_constants_hash_offset) % norb_constants_hash_mod;
         }
         return ans;
@@ -63,6 +65,8 @@ namespace norb {
     inline lld hash(const std::string &str) {
         lld ans = 0;
         for (const auto i: str) {
+            if (i == '\0')
+                break;
             ans = (ans * norb_constants_hash_mul + i - norb_constants_hash_offset) % norb_constants_hash_mod;
         }
         return ans;
