@@ -1,21 +1,9 @@
 #pragma once
 
-/**
- * # Why `inline` ?
- *
- * I quote from https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file:
- *
- * > The only portable way of using templates at the moment is to implement them in header files by using inline functions.
- *
- * Using inline solves my problem, but I have no idea whatsoever why.
- * Please if you know what is happening let me know.
- *
- * Norb.
- */
-
 #include "norb_utils.hpp"
 #include <cassert>
 #include <cstring>
+#include <set>
 
 namespace norb {
     // Extensions to std, stl and custom auxiliary functions reside in `utils`.
@@ -96,6 +84,33 @@ namespace norb {
                 os << list[i];
             }
             return os;
+        }
+
+        // The time complexity is $O(n^2)$
+        template<typename T_>
+        bool isSubsetOf(std::vector<T_> a, std::vector<T_> b) {
+            for (auto i : a) {
+                bool identified = false;
+                for (auto j : b) {
+                    if (i == j) {
+                        identified = true;
+                        break;
+                    }
+                }
+                if (!identified)
+                    return false;
+            }
+            return true;
+        }
+
+        // The time complexity is $O(n\log{n})$
+        template<typename T_>
+        bool isSubsetOf(std::set<T_> a, std::set<T_> b) {
+            for (auto i: a) {
+                if (!b.count(i))
+                    return false;
+            }
+            return true;
         }
     }
 }

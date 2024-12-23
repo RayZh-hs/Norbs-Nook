@@ -3,6 +3,7 @@
 #include <fstream>
 #include <list>
 #include <vector>
+#include <set>
 
 namespace norb {
     // Extensions to std, stl and custom auxiliary functions reside in `utils`.
@@ -43,6 +44,12 @@ namespace norb {
         // Allows std::vectors to be printed via std::ostream.
         template<typename T_>
         std::ostream &operator <<(std::ostream &os, std::vector<T_> list);
+
+        template<typename T_>
+        bool isSubsetOf(std::vector<T_> a, std::vector<T_> b);
+
+        template<typename T_>
+        bool isSubsetOf(std::set<T_> a, std::set<T_> b);
     }
 }
 
