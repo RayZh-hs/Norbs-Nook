@@ -199,6 +199,26 @@ namespace norb {
             return ret;
         }
 
+        template<typename T_Key, typename T_Val>
+        T_Val FiledBlockList<T_Key, T_Val>::findFirst(T_Key key) {
+            auto cur_head = seekHead(key);
+
+            while (cur_head != head.end()) {
+                FiledBlockBodyNode body;
+                body.read(f_body, cur_head->pointer);
+                for (int i = 0; i < cur_head->len; i++) {
+                    if (key == body.name[i]) {
+                        return body.val[i];
+                    }
+                }
+                // If found in cycle but hasn't yet returned, we must traverse the next node.
+                ++cur_head;
+                if (cur_head->key_min > key)
+                    break;
+            }
+            return {};
+        }
+
 
         // template<typename T_Key, typename T_Val>
         //         FiledBlockList<T_Key, T_Val>::

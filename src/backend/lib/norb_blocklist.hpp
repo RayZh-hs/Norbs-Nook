@@ -54,6 +54,8 @@ namespace norb {
 
             std::vector<T_Val> valAsVector();
 
+            T_Val findFirst(T_Key key);
+
         private:
             static constexpr int npos = -1;
             static constexpr int global_size = sizeof(int) * 2;
