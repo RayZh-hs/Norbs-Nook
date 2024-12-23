@@ -18,6 +18,8 @@ namespace norb::norbs_nook_constants {
         constexpr inline int book_author_len = 60 + 2;
         constexpr inline int book_keyword_len = 60 + 2;
 
+        constexpr inline char book_keyword_separator = '|';
+
         const inline std::string &book_list_head_name = "book-list-head.bin";
         const inline std::string &book_list_body_name = "book-list-body.bin";
         const inline std::string &book_isbn_head_name = "book-isbn-head.bin";
