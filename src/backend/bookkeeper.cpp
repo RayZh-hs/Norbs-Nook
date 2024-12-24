@@ -1,4 +1,7 @@
 #include "bookkeeper.hpp"
+
+#include <iomanip>
+
 #include "constants.hpp"
 
 namespace norb {
@@ -13,6 +16,34 @@ namespace norb {
 
     bool Book::operator < (const Book &other) const {
         return isbn < other.isbn;
+    }
+
+    bool Book::operator <= (const Book &other) const {
+        return isbn <= other.isbn;
+    }
+
+    bool Book::operator > (const Book &other) const {
+        return isbn > other.isbn;
+    }
+
+    bool Book::operator >= (const Book &other) const {
+        return isbn >= other.isbn;
+    }
+
+    // TODO: figure out whether comparing isbn in this context is enough
+    bool Book::operator==(const Book &other) const {
+        return isbn == other.isbn;
+    }
+
+    std::ostream &operator << (std::ostream &os, const Book& book) {
+        os << book.isbn     << '\t'
+           << book.name     << '\t'
+           << book.author   << '\t'
+           << book.keyword  << '\t'
+           << std::fixed    << std::setprecision(2)
+           << book.price    << '\t'
+           << book.quantity << '\n';
+        return os;
     }
 
     BookManager::BookManager(const std::string &book_list_head_name, const std::string &book_list_body_name,
@@ -129,7 +160,7 @@ namespace norb {
         return quantity * book.price;
     }
 
-    bool BookManager::Import(int quantity, int total_cost) {
+    bool BookManager::Import(const int quantity, const double total_cost) {
         if (selected.empty())
             return false;
         int id = selected.top();
@@ -145,7 +176,7 @@ namespace norb {
         return true;
     }
 
-    bool BookManager::Modify(int id, Book new_info) {
+    bool BookManager::Modify(Book new_info) {
         if (selected.empty())
             return false;
         const auto id = selected.top();
@@ -153,21 +184,21 @@ namespace norb {
             return false;
         }
         Book old_info = book_list->findFirst(id);
-        book_list->del(id, old_info);
-        book_list->del(id, new_info);
+        assert(book_list->del(id, old_info));
+        assert(book_list->insert(id, new_info));
         // Change ISBN
         if (new_info.isbn != old_info.isbn) {
-            isbn_id_list->del(old_info.isbn, id);
+            assert(isbn_id_list->del(old_info.isbn, id));
             isbn_id_list->insert(new_info.isbn, id);
         }
         // Change Name
         if (new_info.name != old_info.name) {
-            name_id_list->del(old_info.name, id);
+            assert(name_id_list->del(old_info.name, id));
             name_id_list->insert(new_info.name, id);
         }
         // Change Author
         if (new_info.author != old_info.author) {
-            author_id_list->del(old_info.author, id);
+            assert(author_id_list->del(old_info.author, id));
             author_id_list->insert(new_info.author, id);
         }
         // Change Keyword
@@ -175,7 +206,7 @@ namespace norb {
             auto old_parsed = old_info.keyword.split_and_hash(book_keyword_separator);
             auto new_parsed = new_info.keyword.split_and_hash(book_keyword_separator);
             for (auto i : old_parsed) {
-                hashed_keyword_id_list->del(i, id);
+                assert(hashed_keyword_id_list->del(i, id));
             }
             for (auto i : new_parsed) {
                 hashed_keyword_id_list->insert(i, id);
@@ -186,7 +217,7 @@ namespace norb {
         return true;
     }
 
-    bool BookManager::Select(string<book_isbn_len> &isbn) {
+    bool BookManager::Select(const string<book_isbn_len> &isbn) {
         int id;
         const bool is_new_book = !isbn_id_list->count(isbn);
         id = is_new_book ? (++uid_counter) : isbn_id_list->findFirst(isbn);

@@ -57,7 +57,7 @@ namespace norb {
 
         // Inserts a new object into the list.
         template<typename T_Key, typename T_Val>
-        void FiledBlockList<T_Key, T_Val>::insert(const T_Key key, const T_Val val) {
+        bool FiledBlockList<T_Key, T_Val>::insert(const T_Key key, const T_Val val) {
             item_count++;
             auto put_head = seekHead(key, val);
             FiledBlockBodyNode body;
@@ -72,6 +72,7 @@ namespace norb {
             if (put_head->len >= cell_break_threshold) {
                 splitCell(put_head, body);
             }
+            return true;
         }
 
         // Returns all entries through the given key, in ascending order.
@@ -106,7 +107,7 @@ namespace norb {
 
         // Deletes a (entry, key) pair, if it exists.
         template<typename T_Key, typename T_Val>
-        void FiledBlockList<T_Key, T_Val>::del(const T_Key key, const T_Val val) {
+        bool FiledBlockList<T_Key, T_Val>::del(const T_Key key, const T_Val val) {
             auto cur_head = seekHead(key, val);
             FiledBlockBodyNode body;
             body.read(f_body, cur_head->pointer);
@@ -120,7 +121,7 @@ namespace norb {
             }
             if (del_pos == npos) {
                 // Then nothing should be deleted.
-                return;
+                return false;
             }
             // Deleting the node is equivalent to moving all after it forward one step.
             for (int i = del_pos + 1; i < cur_head->len; i++) {
@@ -134,6 +135,7 @@ namespace norb {
             // Write the block back to disk.
             body.write(f_body, cur_head->pointer);
             // Conduct merging. Deprecated.
+            return true;
         }
 
         // Returns whether a list is empty.

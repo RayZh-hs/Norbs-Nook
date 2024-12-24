@@ -32,6 +32,13 @@ namespace norb {
         Book() = default;
 
         bool operator < (const Book& other) const;
+        bool operator <= (const Book& other) const;
+        bool operator > (const Book& other) const;
+        bool operator >= (const Book& other) const;
+        bool operator == (const Book& other) const;
+
+        friend std::ostream &operator << (std::ostream &os, const Book &book);
+
     };
 
     class BookManager {
@@ -79,16 +86,16 @@ namespace norb {
 
         bool StackRemove();
 
-        bool Select(norb::string<book_isbn_len> &isbn);
+        bool Select(const string<book_isbn_len> &isbn);
 
         // Note that these errors must be handled before calling this function:
         // 1. no repeated params;
         // 2. changes not null;
         // 3. changing isbn to its original value is forbidden;
         // 4. keyword shouldn't contain identical information;
-        bool Modify(int id, Book new_info);
+        bool Modify(Book new_info);
 
-        bool Import(int quantity, int total_cost);
+        bool Import(int quantity, double total_cost);
 
         bool AnySelected();
 

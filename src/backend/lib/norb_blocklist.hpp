@@ -31,13 +31,13 @@ namespace norb {
             ~FiledBlockList();
 
             // Inserts a new object into the list.
-            void insert(T_Key key, T_Val val);
+            bool insert(T_Key key, T_Val val);
 
             // Returns all entries through the given key, in ascending order.
             std::vector<T_Val> find(T_Key key);
 
             // Deletes a (entry, key) pair, if it exists.
-            void del(T_Key key, T_Val val);
+            bool del(T_Key key, T_Val val);
 
             // Returns whether a list is empty.
             bool empty() const;
