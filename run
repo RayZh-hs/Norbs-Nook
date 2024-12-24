@@ -25,7 +25,7 @@ cd cmake-build-debug/ || exit 1  #Exit if cd fails
 
 # Clean *.metadata files ONLY before the first run if clean flag is set.
 if $clean_flag; then
-    find . -maxdepth 1 -name "*.testdata" -delete
+    find . -maxdepth 1 -name "*.bin" -delete
 fi
 
 
