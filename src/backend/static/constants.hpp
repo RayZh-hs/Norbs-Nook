@@ -31,4 +31,11 @@ namespace norb::norbs_nook_constants {
         const inline std::string &book_keyword_head_name = "book-keyword-head.bin";
         const inline std::string &book_keyword_body_name = "book-keyword-body.bin";
     }
+
+    namespace action_constants {
+        constexpr inline int action_description_len = 100;
+
+        const inline std::string &action_history_name = "action-history.bin";
+        const inline std::string &transaction_history_name = "transaction-history.bin";
+    }
 }

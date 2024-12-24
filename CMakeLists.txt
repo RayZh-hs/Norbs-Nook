@@ -13,26 +13,12 @@ file(GLOB TEST_SOURCES "tests/unit-test/*.cpp")
 
 # List common dependencies
 set(COMMON_DEPENDENCIES
-        #        src/backend/static/constants.hpp
         src/backend/account.cpp
         src/backend/lib/norb_blocklist_init.cpp
-        #        src/backend/account.hpp
         src/backend/bookkeeper.cpp
-        #        src/backend/bookkeeper.hpp
         src/backend/logging.cpp
         src/backend/global.cpp
-        #        src/backend/global.hpp
-        #        src/backend/logging.hpp
-        #        src/backend/lib/norb_blocklist.hpp
-        #        src/backend/lib/norb_utils.hpp
-        #        src/backend/lib/norb_string.hpp
-        #        src/backend/lib/norb_bounds.hpp
-        #        src/backend/lib/norb_alias.hpp
-        #        src/backend/lib/norb_naivelist.hpp
-        #        src/backend/lib/norb_utils.tpp
-        #        src/backend/lib/norb_bounds.tpp
-        #        src/backend/lib/norb_blocklist.tpp
-        #        src/backend/lib/norb_string.tpp
+        src/backend/action.cpp
 )
 
 # Iterate over each test source file and create a corresponding executable
