@@ -11,7 +11,7 @@ namespace norb {
         template<typename T_>
         class FiledNaiveList {
         public:
-            FiledNaiveList(const std::string f_name_) {
+            FiledNaiveList(const std::string &f_name_) {
                 f_name = f_name_;
                 utils::fAssert(f_name);
                 f_stream.open(f_name, file_open_mode);
@@ -33,7 +33,7 @@ namespace norb {
                 f_stream.close();
             }
 
-            T_ get(const int index) {
+            T_ get(const int index) const {
                 assert(f_stream.good());
                 if (index >= size_ || index < 0) {
                     throw std::range_error("norb::FiledNaiveList: INDEX OUT OF RANGE!");
@@ -65,6 +65,21 @@ namespace norb {
                 return size_;
             }
 
+            T_ push_back(T_ to) {
+                assert(f_stream.good());
+                const auto ret = set(size_, to);
+                assert(f_stream.good());
+                return ret;
+            }
+
+            std::vector<T_> as_vector() const {
+                std::vector<T_> ret;
+                for (int i = 0; i < size_; i++) {
+                    ret.push_back(get(i));
+                }
+                return ret;
+            }
+
         private:
 
             static constexpr auto file_open_mode = std::ios::binary | std::ios::in | std::ios::out;
@@ -72,7 +87,7 @@ namespace norb {
 
             int size_ = 0;
             std::string f_name;
-            std::fstream f_stream;
+            mutable std::fstream f_stream;
 
             int getPos(const int index) const {
                 return sizeof(int) + sizeof_t * index;
