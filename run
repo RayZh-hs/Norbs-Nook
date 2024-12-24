@@ -2,6 +2,8 @@
 
 clean_flag=false
 size_flag=false
+binary_flag=false
+binary_string=""
 
 # Process command-line arguments
 while [[ $# -gt 0 ]]; do
@@ -12,6 +14,15 @@ while [[ $# -gt 0 ]]; do
         --size|-s)
             size_flag=true
             ;;
+        -b)
+            binary_flag=true
+            shift # Shift to get the string argument
+            if [[ $# -eq 0 ]]; then  # Check if the string argument is provided
+                echo "Error: -b option requires a string argument." >&2
+                exit 1
+            fi
+            binary_string="$1"
+            ;;
         *)
             test_cases+=("$1")
             ;;
@@ -20,14 +31,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Change to the build directory
-cd cmake-build-debug/ || exit 1  #Exit if cd fails
+cd cmake-build-debug/ || exit 1
 
-
-# Clean *.metadata files ONLY before the first run if clean flag is set.
+# Clean *.bin files if clean flag is set.
 if $clean_flag; then
     find . -maxdepth 1 -name "*.bin" -delete
 fi
-
 
 # Loop through test cases
 for input_file_base in "${test_cases[@]}"; do
@@ -44,12 +53,21 @@ for input_file_base in "${test_cases[@]}"; do
     printf "\e[0m"
 done
 
-# Show sizes if size flag is set AFTER processing test cases
+
+# Show sizes or binary data
 if $size_flag; then
-    echo ""  # Add a blank line for separation
+    echo ""
     echo "Metadata file sizes:"
-    find . -maxdepth 1 -name "*.testdata" -printf "%s\t%p\n" | while IFS=$'\t' read -r size file; do
+    find . -maxdepth 1 -name "*.bin" -printf "%s\t%p\n" | while IFS=$'\t' read -r size file; do
         printf "\e[33m%s\e[0m\t%s\n" "$size" "$file"
+    done
+elif $binary_flag; then  # Check binary flag after size flag
+    echo ""
+    echo "Binary data of files containing '$binary_string':"
+    find . -maxdepth 1 -name "*.bin" -name "*$binary_string*" -print0 | while IFS= read -r -d $'\0' file; do
+      echo "File: $file"
+      xxd -b "$file"
+      echo "" # Add an extra blank line
     done
 fi
 
