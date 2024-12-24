@@ -86,6 +86,12 @@ namespace norb {
             return os;
         }
 
+        template<typename T_a_, typename T_b_>
+        std::ostream &operator <<(std::ostream &os, std::pair<T_a_, T_b_> pair) {
+            os << '(' << pair.first << ", " << pair.second << ')';
+            return os;
+        }
+
         // The time complexity is $O(n^2)$
         template<typename T_>
         bool isSubsetOf(std::vector<T_> a, std::vector<T_> b) {

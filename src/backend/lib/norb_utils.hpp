@@ -45,6 +45,10 @@ namespace norb {
         template<typename T_>
         std::ostream &operator <<(std::ostream &os, std::vector<T_> list);
 
+        // Allows std::pair to be printed via std::ostream.
+        template<typename T_a_, typename T_b_>
+        std::ostream &operator <<(std::ostream &os, std::pair<T_a_, T_b_> pair);
+
         template<typename T_>
         bool isSubsetOf(std::vector<T_> a, std::vector<T_> b);
 
