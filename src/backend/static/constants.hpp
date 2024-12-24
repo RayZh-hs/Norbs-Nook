@@ -1,5 +1,6 @@
 #pragma once
 
+#include <logging.hpp>
 #include <string>
 
 namespace norb::norbs_nook_constants {
@@ -37,5 +38,15 @@ namespace norb::norbs_nook_constants {
 
         const inline std::string &action_history_name = "action-history.bin";
         const inline std::string &transaction_history_name = "transaction-history.bin";
+    }
+
+    namespace global_constants {
+        const inline std::string blocklist_global_name = "blocklist-global.bin";
+        const inline std::string uid_global_name = "uid-global.bin";
+    }
+
+    namespace log_constants {
+        constexpr Logger::level log_level = Logger::level::NONE;
+        const inline std::string log_name = "norbs_nook_logging.log";
     }
 }
