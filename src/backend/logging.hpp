@@ -18,7 +18,13 @@ namespace norb {
 
         void SetScreenDebugLevel(level new_level);
 
-        void Log(level level_, const std::string &msg);
+        template <typename T_>
+        void Log(level level_, const T_ &msg);
+
+        template <typename T_>
+        friend Logger& operator << (Logger &logger, const T_ &val);
+
+        friend Logger& operator << (Logger &logger, const level &level_);
 
         void PrintAll(level level_);
         void PrintAll();
@@ -31,6 +37,7 @@ namespace norb {
 
         static const std::unordered_map<level, std::string> level_name;
 
+        level cur_level = level::NONE;
         level screen_log_level = level::DEBUG;
         std::string f_log_name;
         std::fstream f_log;
