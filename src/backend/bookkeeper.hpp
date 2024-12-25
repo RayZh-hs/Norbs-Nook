@@ -21,6 +21,7 @@ namespace norb {
         double total_cost = 0;
 
         typedef string<book_isbn_len> isbn_t_;
+        typedef lld isbn_hashed_t_;
         typedef string<book_name_len> name_t_;
         typedef string<book_author_len> author_t_;
         typedef string<book_keyword_len> keyword_t_;
@@ -108,7 +109,7 @@ namespace norb {
         // UIDs range from 1 to uid_counter. A book's uid is fixed once it has been created.
         int uid_counter = 0;
         std::unique_ptr<algo::FiledBlockList<int, Book> > book_list;
-        std::unique_ptr<algo::FiledBlockList<Book::isbn_t_, int> > isbn_id_list;
+        std::unique_ptr<algo::FiledBlockList<Book::isbn_hashed_t_, int> > isbn_id_list;
         std::unique_ptr<algo::FiledBlockList<Book::name_t_, int> > name_id_list;
         std::unique_ptr<algo::FiledBlockList<Book::author_t_, int> > author_id_list;
         std::unique_ptr<algo::FiledBlockList<lld, int> > hashed_keyword_id_list;

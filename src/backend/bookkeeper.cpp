@@ -55,7 +55,7 @@ namespace norb {
                              std::reference_wrapper<std::fstream> f_global_wrapper)
         : book_list(std::make_unique<algo::FiledBlockList<int, Book> >
               (book_list_head_name, book_list_body_name, f_global_wrapper)),
-          isbn_id_list(std::make_unique<algo::FiledBlockList<Book::isbn_t_, int> >
+          isbn_id_list(std::make_unique<algo::FiledBlockList<Book::isbn_hashed_t_, int> >
               (book_isbn_head_name, book_isbn_body_name, f_global_wrapper)),
           name_id_list(std::make_unique<algo::FiledBlockList<Book::name_t_, int> >
               (book_name_head_name, book_name_body_name, f_global_wrapper)),
@@ -110,7 +110,7 @@ namespace norb {
     }
 
     std::vector<Book> BookManager::FindByIsbn(const string<book_isbn_len> &isbn) const {
-        const std::vector<int> ids = std::move(isbn_id_list->find(isbn));
+        const std::vector<int> ids = std::move(isbn_id_list->find(hash(isbn)));
         std::vector<Book> ret;
         for (const auto i : ids) {
             ret.push_back(book_list->findFirst(i));
@@ -188,8 +188,8 @@ namespace norb {
         assert(book_list->insert(id, new_info));
         // Change ISBN
         if (new_info.isbn != old_info.isbn) {
-            assert(isbn_id_list->del(old_info.isbn, id));
-            isbn_id_list->insert(new_info.isbn, id);
+            assert(isbn_id_list->del(hash(old_info.isbn), id));
+            isbn_id_list->insert(hash(new_info.isbn), id);
         }
         // Change Name
         if (new_info.name != old_info.name) {
@@ -219,14 +219,15 @@ namespace norb {
 
     bool BookManager::Select(const string<book_isbn_len> &isbn) {
         int id;
-        const bool is_new_book = !isbn_id_list->count(isbn);
-        id = is_new_book ? (++uid_counter) : isbn_id_list->findFirst(isbn);
+        lld hashed_isbn = hash(isbn);
+        const bool is_new_book = !isbn_id_list->count(hashed_isbn);
+        id = is_new_book ? (++uid_counter) : isbn_id_list->findFirst(hashed_isbn);
         if (is_new_book) {
             // TODO: (although it seems unlikely) test whether multiple new books will collide!
             Book book {};
             book.isbn = isbn;
             book_list->insert(id, book);
-            isbn_id_list->insert(isbn, id);
+            isbn_id_list->insert(hashed_isbn, id);
             author_id_list->insert(book.author, id);
             name_id_list->insert(book.name, id);
             hashed_keyword_id_list->insert(0, id);
@@ -241,7 +242,8 @@ namespace norb {
     }
 
     int BookManager::GetId(const string<book_isbn_len> &isbn) {
-        return isbn_id_list->findFirst(isbn);
+        const lld hashed_isbn = hash(isbn);
+        return isbn_id_list->findFirst(hashed_isbn);
     }
 
     Book BookManager::GetInfo(int id) {

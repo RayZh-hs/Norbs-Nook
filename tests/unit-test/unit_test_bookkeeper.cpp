@@ -31,7 +31,7 @@ int main() {
     });
     manager.Select("000");
     manager.Modify({
-        "d", "Survival Enginerring", "by norb", "mc|redstone|tutorial"
+        "d", "Survival Engineering", "by norb", "mc|redstone|tutorial"
     });
     manager.Select("000");
     manager.Modify({
