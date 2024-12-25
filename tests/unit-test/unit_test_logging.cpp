@@ -18,11 +18,20 @@ int main() {
     logger.Log(level::INFO, "This is appended to the list.");
     logger.PrintAll();
 
-    std::cout << "Trunc Test" << '\n';
+    std::cout << "Stream Test" << '\n';
     logger.ClearAll();
+    logger.SetScreenDebugLevel(level::INFO);
+    logger << level::INFO << "This" << ' ' << 1 << "line of " << "text" << norb::Logger::EOS;
+    logger << level::DEBUG << "is hidden" << norb::Logger::EOS;
+
+    logger.SetScreenDebugLevel(level::DEBUG);
     logger.PrintAll();
-    logger.Log(level::INFO, "This should be the only text available.");
-    logger.PrintAll();
+    //
+    // std::cout << "Trunc Test" << '\n';
+    // logger.ClearAll();
+    // logger.PrintAll();
+    // logger.Log(level::INFO, "This should be the only text available.");
+    // logger.PrintAll();
 
     return 0;
 }
