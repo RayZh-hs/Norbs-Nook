@@ -19,6 +19,7 @@ set(COMMON_DEPENDENCIES
         src/backend/logging.cpp
         src/backend/global.cpp
         src/backend/action.cpp
+        src/backend/business_logic.cpp
 )
 
 # Iterate over each test source file and create a corresponding executable
