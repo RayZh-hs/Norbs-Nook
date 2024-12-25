@@ -14,6 +14,7 @@ file(GLOB TEST_SOURCES "tests/unit-test/*.cpp")
 # List common dependencies
 set(COMMON_DEPENDENCIES
         src/backend/account.cpp
+        src/backend/lib/strlib.cpp
         src/backend/lib/norb_blocklist_init.cpp
         src/backend/bookkeeper.cpp
         src/backend/logging.cpp
