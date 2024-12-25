@@ -42,6 +42,11 @@ namespace norb {
             return userid >= other.userid;
         }
 
+        friend std::ostream& operator << (std::ostream& os, const Account& account) {
+            os << "{" << account.privilege << "} [" << account.userid << ']' << ' ' << account.username << " #" << account.hashed_password;
+            return os;
+        }
+
         string<account_userid_len> userid{};
         // string<account_password_len> password{};
         // Storing hashed passwords are safer than storing them in plain text.
@@ -97,7 +102,7 @@ namespace norb {
         bool UserAdd(const std::string &userid, const std::string &password, int privilege, const std::string &username);
 
         // Delete a user. Returns whether the operation is successful.
-        bool Delete(const std::string &userid);
+        bool Delete(const std::string &userid) noexcept;
 
         // Get the current active user.
         Account GetActiveUser() const;

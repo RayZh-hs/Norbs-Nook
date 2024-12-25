@@ -47,7 +47,7 @@ namespace norb {
     }
 
     bool AccountManager::Logout() {
-        if (login_stack.empty()) {
+        if (GetCurPrivilege() < 1 || login_stack.empty()) {
             return false;
         }
         login_stack.pop_back();
@@ -66,6 +66,9 @@ namespace norb {
 
     bool AccountManager::ChangePassword(const std::string &userid, const std::string &new_password,
                                         const std::string &current_password) {
+        if (GetCurPrivilege() < 1) {
+            return false;
+        }
         const auto hashed_userid = hash(userid);
         const int cur_privilege = GetCurPrivilege();
         auto found = account_list->find(hashed_userid);
@@ -98,7 +101,7 @@ namespace norb {
 
     bool AccountManager::UserAdd(const std::string &userid, const std::string &password, const int privilege,
                                  const std::string &username) {
-        if (GetCurPrivilege() <= privilege) {
+        if (GetCurPrivilege() <= privilege || GetCurPrivilege() < 3) {
             return false;
         }
         lld hashed_userid = hash(userid);
@@ -111,7 +114,11 @@ namespace norb {
         return true;
     }
 
-    bool AccountManager::Delete(const std::string &userid) {
+    bool AccountManager::Delete(const std::string &userid) noexcept {
+        // TODO False alarm? Or true bug.
+        if (GetCurPrivilege() < 7) {
+            return false;
+        }
         const lld hashed_userid = hash(userid);
         auto found = account_list->find(hashed_userid);
         if (found.empty()) {

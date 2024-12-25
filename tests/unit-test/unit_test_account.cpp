@@ -4,8 +4,8 @@
 
 int main() {
     std::fstream f_global;
-    norb::utils::fAssert("global.testdata");
-    f_global.open("global.testdata", std::ios::in | std::ios::out | std::ios::binary);
+    norb::utils::fAssert("global.bin");
+    f_global.open("global.bin", std::ios::in | std::ios::out | std::ios::binary);
     f_global.seekg(0);
     norb::AccountManager account_manager(f_global);
     std::cout << std::boolalpha;
@@ -45,5 +45,11 @@ int main() {
     std::cout << account_manager.SwitchUser("root", "roots") << '\n';
 
     std::cout << account_manager.GetActiveUser().username << '\n';
+
+    std::cout << "\nDelete\n";
+    account_manager.SwitchUser("root", "sjtu");
+    std::cout << account_manager.Delete("user-2") << '\n';
+    std::cout << account_manager.GetActiveUser() << '\n';
+
     return 0;
 }
