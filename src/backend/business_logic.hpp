@@ -141,5 +141,10 @@ namespace norb {
 
     private:
         std::unique_ptr<GlobalAssetManager> manager;
+
+        void RequirePrivilege(const int privilege) const {
+            if (manager->account_manager->GetCurPrivilege() < privilege)
+                throw UtilityException("UNDERPRIVILEGED ERROR");
+        }
     };
 }

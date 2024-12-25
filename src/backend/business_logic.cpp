@@ -156,31 +156,37 @@ namespace norb {
 
     std::vector<Book> BusinessLogicImplement::FindAll() {
         manager->logger->Log(level::DEBUG, std::string("Called FindAll"));
+        RequirePrivilege(1);
         return manager->book_manager->FindAll();
     }
 
     std::vector<Book> BusinessLogicImplement::FindByAuthor(const std::string &author) {
         manager->logger->Log(level::DEBUG, std::string("Called FindByAuthor: " + author));
+        RequirePrivilege(1);
         return manager->book_manager->FindByAuthor(author);
     }
 
     std::vector<Book> BusinessLogicImplement::FindByIsbn(const std::string &isbn) {
         manager->logger->Log(level::DEBUG, std::string("Called FindByISBN: " + isbn));
+        RequirePrivilege(1);
         return manager->book_manager->FindByIsbn(isbn);
     }
 
     std::vector<Book> BusinessLogicImplement::FindByKeyword(const std::string &keyword) {
         manager->logger->Log(level::DEBUG, std::string("Called FindByKeyword: " + keyword));
+        RequirePrivilege(1);
         return manager->book_manager->FindByKeyword(keyword);
     }
 
     std::vector<Book> BusinessLogicImplement::FindByName(const std::string &name) {
         manager->logger->Log(level::DEBUG, std::string("Called FindByName: " + name));
+        RequirePrivilege(1);
         return manager->book_manager->FindByName(name);
     }
 
     double BusinessLogicImplement::Buy(const std::string &isbn, int quantity) {
         manager->logger->Log(level::DEBUG, std::string("Called Buy"));
+        RequirePrivilege(1);
         auto success = manager->book_manager->Buy(manager->book_manager->GetId(isbn), quantity);
         if (success == (BookManager::npos)) {
             throw UtilityException("BOOK PURCHASE ERROR");
@@ -193,12 +199,14 @@ namespace norb {
 
     void BusinessLogicImplement::Select(const std::string &isbn) {
         manager->logger->Log(level::DEBUG, std::string("Called Select"));
+        RequirePrivilege(3);
         manager->book_manager->Select(isbn);
         manager->logger->Log(level::INFO, "Selection successful");
     }
 
     void BusinessLogicImplement::Modify(const Book &new_info) {
         manager->logger->Log(level::DEBUG, std::string("Called Modify"));
+        RequirePrivilege(3);
         if (!manager->book_manager->Modify(new_info)) {
             manager->logger->Log(level::WARNING, "Modification failed!");
             throw UtilityException("MODIFY ERROR");
@@ -209,6 +217,7 @@ namespace norb {
 
     void BusinessLogicImplement::Import(int quantity, double total_cost) {
         manager->logger->Log(level::DEBUG, std::string("Called Import"));
+        RequirePrivilege(3);
         if (manager->book_manager->Import(quantity, total_cost)) {
             manager->logger->Log(level::INFO, "Import successful!");
             manager->action_manager->RegisterTransaction(-total_cost);
@@ -220,6 +229,7 @@ namespace norb {
 
     std::pair<double, double> BusinessLogicImplement::GetFinance() {
         manager->logger->Log(level::DEBUG, std::string("Called GetFinance"));
+        RequirePrivilege(7);
         auto ret = manager->action_manager->GetTransactionSum();
         if (ret.first == ActionManager::npos) {
             manager->logger->Log(level::WARNING, std::string("Get finance failed"));
@@ -232,6 +242,7 @@ namespace norb {
 
     std::pair<double, double> BusinessLogicImplement::GetFinance(int count) {
         manager->logger->Log(level::DEBUG, std::string("Called GetFinance"));
+        RequirePrivilege(7);
         auto ret = manager->action_manager->GetTransactionSum(count);
         if (ret.first == ActionManager::npos) {
             manager->logger->Log(level::WARNING, std::string("Get finance failed"));
@@ -244,16 +255,19 @@ namespace norb {
 
     std::vector<std::string> BusinessLogicImplement::GetLog() {
         manager->logger->Log(level::DEBUG, std::string("Called GetLog"));
+        RequirePrivilege(7);
         return manager->logger->GetAll();
     }
 
     std::vector<double> BusinessLogicImplement::ReportFinance() {
         manager->logger->Log(level::DEBUG, std::string("Called ReportFinance"));
+        RequirePrivilege(7);
         return manager->action_manager->GetAllTransactions();
     }
 
     std::vector<Action> BusinessLogicImplement::ReportEmployee() {
         manager->logger->Log(level::DEBUG, std::string("Called ReportEmployee"));
+        RequirePrivilege(7);
         return manager->action_manager->GetAllActions();
     }
 }

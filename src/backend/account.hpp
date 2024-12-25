@@ -107,12 +107,12 @@ namespace norb {
         // Get the current active user.
         Account GetActiveUser() const;
 
+        [[nodiscard]] int GetCurPrivilege() const;
+
     private:
         // account_list is a map from the hash of userid to the full information.
         typedef algo::FiledBlockList<lld, Account> account_list_t_;
         std::unique_ptr<account_list_t_> account_list;
         std::vector<Account> login_stack;
-
-        int GetCurPrivilege() const;
     };
 }
