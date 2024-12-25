@@ -100,10 +100,10 @@ namespace norb {
 
         bool AnySelected();
 
-    private:
         // Several used constexpr vars
         static constexpr int npos = -1;
 
+    private:
         // The f_uid is a reference passed in by global, and managed externally by norb::GlobalVariableManager in global.hpp
         std::fstream &f_uid;
         // UIDs range from 1 to uid_counter. A book's uid is fixed once it has been created.

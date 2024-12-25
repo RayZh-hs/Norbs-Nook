@@ -41,8 +41,9 @@ namespace norb {
         std::pair<double, double> GetTransactionSum();
         std::pair<double, double> GetTransactionSum(int count);
 
-    private:
         constexpr static double npos = -1.00;
+
+    private:
         std::unique_ptr<algo::FiledNaiveList<Action>> action_history;
         std::unique_ptr<algo::FiledNaiveList<double>> transaction_history;
     };
