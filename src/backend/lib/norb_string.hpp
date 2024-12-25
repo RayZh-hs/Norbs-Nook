@@ -27,6 +27,16 @@ namespace norb {
         [[nodiscard]] std::vector<std::string> split (char separator) const;
 
         [[nodiscard]] std::vector<lld> split_and_hash(char separator) const;
+
+        inline operator std::string() const {
+            std::string s;
+            for (auto i : *this) {
+                if (i == '\0')
+                    break;
+                s += i;
+            }
+            return s;
+        }
     };
 
     constexpr lld norb_constants_hash_offset = 0;
