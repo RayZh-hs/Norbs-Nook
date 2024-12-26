@@ -100,6 +100,10 @@ namespace norb {
 
         bool AnySelected();
 
+        int GetSelectedId() {
+            return selected.empty() ? npos : selected.top();
+        }
+
         // Several used constexpr vars
         static constexpr int npos = -1;
 
