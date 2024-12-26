@@ -38,7 +38,7 @@ namespace norb {
         // manager->logger->Log(level::INFO, std::string("Called SwitchUser: ") + user_id + " with password " + password);
         *(manager->logger) << level::DEBUG << "Called SwitchUser: " << user_id << " with password #" << hash(password) << Logger::EOS;
         const auto user = manager->account_manager->GetActiveUser();
-        const bool success = manager->account_manager->SwitchUser(user_id);
+        const bool success = manager->account_manager->SwitchUser(user_id, password);
         if (success) {
             manager->logger->Log(level::INFO, "SwitchUser successful!");
             (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() << Logger::EOS;
