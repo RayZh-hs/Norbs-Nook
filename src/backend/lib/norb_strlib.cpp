@@ -24,6 +24,21 @@ double norb::stringToDouble(const std::string &str) {
     return value;
 }
 
+// "abc"
+// abcc"
+
+bool norb::unquote(std::string &s) {
+    const std::size_t siz = s.size();
+    if (s[0] == '\"' && s[siz - 1] == '\"') {
+        for (int i = 0; i < siz - 2; i++)
+            s[i] = s[i + 1];
+        s[siz - 2] = s[siz - 1] = '\0';
+        return true;
+    }
+    return false;
+}
+
+
 bool norb::matchRegex(const std::string& str, const std::regex& pattern) {
     std::smatch res;
     return std::regex_match(str, res, pattern);

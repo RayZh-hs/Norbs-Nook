@@ -66,43 +66,56 @@ namespace norb {
                 }
                 else if (matchRegex(line, regex_show_all)) {
                     auto books = interface->FindAll();
-                    for (auto i : books) {
-                        std::cout << i << '\n';
+                    if (books.empty()) {
+                        std::cout << '\n';
+                    } else {
+                        for (auto i : books) {
+                            std::cout << i;
+                        }
                     }
                 }
                 else if (matchRegex(line, regex_show_author)) {
                     auto group = groupRegex(line, regex_show_author);
                     auto books = interface->FindByAuthor(group[1]);
-                    for (auto i : books) {
-                        std::cout << i << '\n';
+                    if (books.empty()) {
+                        std::cout << '\n';
+                    } else {
+                        for (auto i : books) {
+                            std::cout << i;
+                        }
                     }
                 }
                 else if (matchRegex(line, regex_show_name)) {
                     auto group = groupRegex(line, regex_show_name);
                     auto books = interface->FindByName(group[1]);
-                    for (auto i : books) {
-                        std::cout << i << '\n';
+                    if (books.empty()) {
+                        std::cout << '\n';
+                    } else {
+                        for (auto i : books) {
+                            std::cout << i;
+                        }
                     }
                 }
                 else if (matchRegex(line, regex_show_keyword)) {
                     auto group = groupRegex(line, regex_show_keyword);
                     auto books = interface->FindByKeyword(group[1]);
-                    for (auto i : books) {
-                        std::cout << i << '\n';
-                    }
-                }
-                else if (matchRegex(line, regex_show_name)) {
-                    auto group = groupRegex(line, regex_show_name);
-                    auto books = interface->FindByName(group[1]);
-                    for (auto i : books) {
-                        std::cout << i << '\n';
+                    if (books.empty()) {
+                        std::cout << '\n';
+                    } else {
+                        for (auto i : books) {
+                            std::cout << i;
+                        }
                     }
                 }
                 else if (matchRegex(line, regex_show_isbn)) {
                     auto group = groupRegex(line, regex_show_isbn);
                     auto books = interface->FindByIsbn(group[1]);
-                    for (auto i : books) {
-                        std::cout << i << '\n';
+                    if (books.empty()) {
+                        std::cout << '\n';
+                    } else {
+                        for (auto i : books) {
+                            std::cout << i;
+                        }
                     }
                 }
                 else if (matchRegex(line, regex_buy)) {
@@ -122,31 +135,35 @@ namespace norb {
                     // Load the old book information:
                     Book new_info = interface->GetSelectedBook();
                     if (map.count("ISBN")) {
-                        if (!matchRegex(map["ISBN"], regex_valid_isbn)) {
+                        std::string text = map["ISBN"];
+                        if (!matchRegex(text, regex_valid_isbn)) {
                             throw UtilityException("INVALID ISBN TRAIT");
                         }
-                        if (std::string(new_info.isbn) == map["ISBN"]) {
+                        if (std::string(new_info.isbn) == text) {
                             throw UtilityException("IDENTICAL ISBN ERROR");
                         }
-                        new_info.isbn = map["ISBN"];
+                        new_info.isbn = text;
                     }
                     if (map.count("name")) {
-                        if (!matchRegex(map["name"], regex_valid_book_name)) {
+                        std::string text = map["name"];
+                        if (!unquote(text) || !matchRegex(text, regex_valid_book_name)) {
                             throw UtilityException("INVALID BOOK NAME TRAIT");
                         }
-                        new_info.name = map["name"];
+                        new_info.name = text;
                     }
                     if (map.count("author")) {
-                        if (!matchRegex(map["author"], regex_valid_author)) {
+                        std::string text = map["author"];
+                        if (!unquote(text) || !matchRegex(text, regex_valid_author)) {
                             throw UtilityException("INVALID AUTHOR TRAIT");
                         }
-                        new_info.author = map["author"];
+                        new_info.author = text;
                     }
                     if (map.count("keyword")) {
-                        if (!matchRegex(map["keyword"], regex_valid_keyword)) {
+                        std::string text = map["keyword"];
+                        if (!unquote(text) || !matchRegex(text, regex_valid_keyword)) {
                             throw UtilityException("INVALID KEYWORD TRAIT");
                         }
-                        new_info.keyword = map["keyword"];
+                        new_info.keyword = text;
                     }
                     if (map.count("price")) {
                         if (!matchRegex(map["price"], regex_valid_price)) {
@@ -193,7 +210,7 @@ namespace norb {
             }
             catch (UtilityException &exception) {
                 std::cerr << exception.what() << '\n';
-                std::cout << "Invalid!" << '\n';
+                std::cout << "Invalid" << '\n';
                 continue;
             }
             catch (...) {
