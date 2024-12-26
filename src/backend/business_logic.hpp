@@ -79,6 +79,8 @@ namespace norb {
         virtual std::vector<double> ReportFinance() = 0;
 
         virtual std::vector<Action> ReportEmployee() = 0;
+
+        virtual Book GetSelectedBook() = 0;
     };
 
     // This class implements the interface.
@@ -138,6 +140,8 @@ namespace norb {
         std::vector<double> ReportFinance() override;
 
         std::vector<Action> ReportEmployee() override;
+
+        Book GetSelectedBook() override;
 
     private:
         std::unique_ptr<GlobalAssetManager> manager;

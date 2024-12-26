@@ -276,4 +276,13 @@ namespace norb {
         RequirePrivilege(7);
         return manager->action_manager->GetAllActions();
     }
+
+    Book BusinessLogicImplement::GetSelectedBook() {
+        auto id = manager->book_manager->GetSelectedId();
+        if (id == BookManager::npos) {
+            return {};
+        }
+        return manager->book_manager->GetInfo(id);
+    }
+
 }
