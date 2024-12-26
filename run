@@ -31,11 +31,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Change to the build directory
-cd cmake-build-debug/ || exit 1
+cd generated/ || exit 1
 
 # Clean *.bin files if clean flag is set.
 if $clean_flag; then
-    find . -maxdepth 1 -name "*.bin" -delete
+    find . -maxdepth 2 -name "*.bin" -delete
+    find . -maxdepth 2 -name "*.log" -delete
 fi
 
 # Loop through test cases
@@ -58,7 +59,7 @@ done
 if $size_flag; then
     echo ""
     echo "Metadata file sizes:"
-    find . -maxdepth 1 -name "*.bin" -printf "%s\t%p\n" | while IFS=$'\t' read -r size file; do
+    find ./data -maxdepth 1 -name "*.bin" -printf "%s\t%p\n" | while IFS=$'\t' read -r size file; do
         printf "\e[33m%s\e[0m\t%s\n" "$size" "$file"
     done
 elif $binary_flag; then  # Check binary flag after size flag
