@@ -51,7 +51,7 @@ namespace norb {
         account_manager = std::make_unique<AccountManager>(blocklist_global);
         book_manager = std::make_unique<BookManager>(uid_global, blocklist_global);
         action_manager = std::make_unique<ActionManager>();
-        logger = std::make_unique<Logger>(log_level, log_name, std::cout);
+        logger = std::make_unique<Logger>(log_level, log_name, logger_use_ostream);
     }
 
 }
