@@ -13,6 +13,17 @@ int norb::stringToInteger(const std::string &str) {
     return value;
 }
 
+double norb::stringToDouble(const std::string &str) {
+    std::istringstream stream(str);
+    double value;
+    stream >> value;
+    if (!stream.eof()) stream >> std::ws;
+    if (stream.fail() || !stream.eof()) {
+        throw std::runtime_error("norb_strlib: INVALID INTEGER");
+    }
+    return value;
+}
+
 bool norb::matchRegex(const std::string& str, const std::regex& pattern) {
     std::smatch res;
     return std::regex_match(str, res, pattern);
