@@ -175,7 +175,13 @@ namespace norb {
     std::vector<Book> BusinessLogicImplement::FindByKeyword(const std::string &keyword) {
         manager->logger->Log(level::DEBUG, std::string("Called FindByKeyword: " + keyword));
         RequirePrivilege(1);
-        return manager->book_manager->FindByKeyword(keyword);
+        auto ret = manager->book_manager->FindByKeyword(keyword);
+        if (ret.size() == 1 && ret[0].isbn.empty()) {
+            // This is a {{}} callback, meaning that an error has happened.
+            manager->logger->Log(level::WARNING, std::string("Keyword detected error!"));
+            throw UtilityException("INVALID KEYWORD ERROR");
+        }
+        return ret;
     }
 
     std::vector<Book> BusinessLogicImplement::FindByName(const std::string &name) {

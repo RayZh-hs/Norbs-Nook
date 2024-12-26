@@ -133,7 +133,19 @@ namespace norb {
         // Split the string with terminator
         auto keys_parsed = keyword.split_and_hash(book_keyword_separator);
         if (keys_parsed.empty()) {
-            return {};
+            // This is (a very strange) notation for an error return.
+            // TODO check if this notation works
+            return {{}};
+        }
+        {   // Assert that the keywords are pair-wise different.
+            std::set<lld> keyword_set;
+            for(auto i : keys_parsed) {
+                if (keyword_set.count(i)) {
+                    return {{}};
+                } else {
+                    keyword_set.insert(i);
+                }
+            }
         }
         const auto ids = hashed_keyword_id_list->find(keys_parsed[0]);
         std::vector<Book> ret;
