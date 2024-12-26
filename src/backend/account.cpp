@@ -136,7 +136,7 @@ namespace norb {
     }
 
     Account AccountManager::GetActiveUser() const {
-        return login_stack.back();
+        return login_stack.empty() ? Account() : login_stack.back();
     }
 
     int AccountManager::GetCurPrivilege() const {
