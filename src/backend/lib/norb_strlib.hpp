@@ -3,6 +3,9 @@
 #include <regex>
 
 namespace norb {
+
+    int stringToInteger(const std::string &);
+
     // Checks whether a string matches a regex pattern.
     bool matchRegex(const std::string& str, const std::regex& pattern);
 
