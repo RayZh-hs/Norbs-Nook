@@ -14,13 +14,14 @@ file(GLOB TEST_SOURCES "tests/unit-test/*.cpp")
 # List common dependencies
 set(COMMON_DEPENDENCIES
         src/backend/account.cpp
-        src/backend/lib/strlib.cpp
+        src/backend/lib/norb_strlib.cpp
         src/backend/lib/norb_blocklist_init.cpp
         src/backend/bookkeeper.cpp
         src/backend/logging.cpp
         src/backend/global.cpp
         src/backend/action.cpp
         src/backend/business_logic.cpp
+        src/backend/user_interface.cpp
 )
 
 # Iterate over each test source file and create a corresponding executable
