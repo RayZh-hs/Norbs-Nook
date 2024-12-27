@@ -172,6 +172,17 @@ namespace norb {
                             throw UtilityException("INVALID KEYWORD TRAIT");
                         }
                         new_info.keyword = text;
+                        // Search for repetition in keywords here.
+                        auto parsed_ = new_info.keyword.split_and_hash(book_keyword_separator);
+                        std::set<lld> parsed_dump_;
+                        for (auto i: parsed_) {
+                            if (parsed_dump_.count(i)) {
+                                throw UtilityException("REPETITIVE KEYWORD TRAIT");
+                            } else {
+                                parsed_dump_.insert(i);
+                            }
+                        }
+                        // Reaching here means succeeding in the repetitive assertion.
                     }
                     if (map.count("price")) {
                         if (!matchRegex(map["price"], regex_valid_price)) {
