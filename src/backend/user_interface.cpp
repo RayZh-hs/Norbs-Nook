@@ -19,7 +19,7 @@ namespace norb {
         // Run the main cycle.
         int line = 118;
         // int line = 1;
-        freopen("output_capture.wrong.out", "w", stdout);
+        freopen("output_capture.wrong.out.roaming", "w", stdout);
         while (true) {
             // Read in the next line of action.
             std::cout << "LINE " << line++ << '\n';

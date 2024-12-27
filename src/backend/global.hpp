@@ -19,6 +19,10 @@ namespace norb {
 
         GlobalVariableManager();
 
+        inline void PrepareForDestruction() {
+            f_uid_global.seekp(0);
+        }
+
         ~GlobalVariableManager();
 
     private:
@@ -45,6 +49,9 @@ namespace norb {
 
         GlobalAssetManager();
 
-        ~GlobalAssetManager() = default;
+        // ~GlobalAssetManager() = default;
+        ~GlobalAssetManager() {
+            global_variable_manager->PrepareForDestruction();
+        }
     };
 }
