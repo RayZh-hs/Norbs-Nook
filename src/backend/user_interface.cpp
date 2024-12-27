@@ -17,8 +17,11 @@ namespace norb {
     void CommandlineUserInterface::Run() {
         std::cerr << "[Hello World] from user_interface.cpp. This is Norb's Nook, up and running." << std::endl;
         // Run the main cycle.
+        int line = 1;
+        freopen("output_capture.out", "w", stdout);
         while (true) {
             // Read in the next line of action.
+            std::cout << "LINE " << line++ << '\n';
             std::string line;
             std::getline(std::cin, line);
             if (std::cin.eof()) {
