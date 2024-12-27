@@ -285,4 +285,8 @@ namespace norb {
         return manager->book_manager->GetInfo(id);
     }
 
+    bool BusinessLogicImplement::IsbnIsOccupied(const std::string &isbn) {
+        return !manager->book_manager->FindByIsbn(isbn).empty();
+    }
+
 }

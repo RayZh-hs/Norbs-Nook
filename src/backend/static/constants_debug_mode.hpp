@@ -11,8 +11,8 @@ namespace norb::norbs_nook_constants {
         constexpr inline int account_password_len = 30 + 2;
         constexpr inline int account_username_len = 30 + 2;
 
-        const inline std::string account_file_head          = "account-head.bin";
-        const inline std::string account_file_body          = "account-body.bin";
+        const inline std::string account_file_head          = "generated/data/account-head.bin";
+        const inline std::string account_file_body          = "generated/data/account-body.bin";
     }
 
     namespace bookkeeper_constants {
@@ -23,34 +23,34 @@ namespace norb::norbs_nook_constants {
 
         constexpr inline char book_keyword_separator        = '|';
 
-        const inline std::string &book_list_head_name       = "book-list-head.bin";
-        const inline std::string &book_list_body_name       = "book-list-body.bin";
-        const inline std::string &book_isbn_head_name       = "book-isbn-head.bin";
-        const inline std::string &book_isbn_body_name       = "book-isbn-body.bin";
-        const inline std::string &book_name_head_name       = "book-name-head.bin";
-        const inline std::string &book_name_body_name       = "book-name-body.bin";
-        const inline std::string &book_author_head_name     = "book-author-head.bin";
-        const inline std::string &book_author_body_name     = "book-author-body.bin";
-        const inline std::string &book_keyword_head_name    = "book-keyword-head.bin";
-        const inline std::string &book_keyword_body_name    = "book-keyword-body.bin";
+        const inline std::string &book_list_head_name       = "generated/data/book-list-head.bin";
+        const inline std::string &book_list_body_name       = "generated/data/book-list-body.bin";
+        const inline std::string &book_isbn_head_name       = "generated/data/book-isbn-head.bin";
+        const inline std::string &book_isbn_body_name       = "generated/data/book-isbn-body.bin";
+        const inline std::string &book_name_head_name       = "generated/data/book-name-head.bin";
+        const inline std::string &book_name_body_name       = "generated/data/book-name-body.bin";
+        const inline std::string &book_author_head_name     = "generated/data/book-author-head.bin";
+        const inline std::string &book_author_body_name     = "generated/data/book-author-body.bin";
+        const inline std::string &book_keyword_head_name    = "generated/data/book-keyword-head.bin";
+        const inline std::string &book_keyword_body_name    = "generated/data/book-keyword-body.bin";
     }
 
     namespace action_constants {
         constexpr inline int action_description_len         = 100;
 
-        const inline std::string &action_history_name       = "action-history.bin";
-        const inline std::string &transaction_history_name  = "transaction-history.bin";
+        const inline std::string &action_history_name       = "generated/data/action-history.bin";
+        const inline std::string &transaction_history_name  = "generated/data/transaction-history.bin";
     }
 
     namespace global_constants {
-        const inline std::string blocklist_global_name      = "blocklist-global.bin";
-        const inline std::string uid_global_name            = "uid-global.bin";
+        const inline std::string blocklist_global_name      = "generated/data/blocklist-global.bin";
+        const inline std::string uid_global_name            = "generated/data/uid-global.bin";
     }
 
     namespace log_constants {
-        constexpr Logger::level log_level                   = Logger::level::NONE;
+        constexpr Logger::level log_level                   = Logger::level::DEBUG;
         inline std::ostream& logger_use_ostream             = std::cerr;
-        const inline std::string log_name                   = "norbs_nook_logging.log";
+        const inline std::string log_name                   = "generated/logs/norbs_nook_logging.log";
     }
 
     namespace validation_constants {

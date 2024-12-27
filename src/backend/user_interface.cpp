@@ -18,13 +18,13 @@ namespace norb {
         std::cerr << "[Hello World] from user_interface.cpp. This is Norb's Nook, up and running." << std::endl;
         // Run the main cycle.
         while (true) {
+            // Read in the next line of action.
+            std::string line;
+            std::getline(std::cin, line);
             if (std::cin.eof()) {
                 std::cerr << "Reached end of control without QUIT or EXIT! Quitting..." << '\n';
                 break;
             }
-            // Read in the next line of action.
-            std::string line;
-            std::getline(std::cin, line);
             assert(std::cin.good());
             if (line.empty()) {
                 continue;
@@ -120,7 +120,8 @@ namespace norb {
                 }
                 else if (matchRegex(line, regex_buy)) {
                     auto group = groupRegex(line, regex_buy);
-                    interface->Buy(group[1], stringToInteger(group[2]));
+                    auto money = interface->Buy(group[1], stringToInteger(group[2]));
+                    std::cout << std::fixed << std::setprecision(2) << money << '\n';
                 }
                 else if (matchRegex(line, regex_select)) {
                     auto group = groupRegex(line, regex_select);
@@ -141,6 +142,9 @@ namespace norb {
                         }
                         if (std::string(new_info.isbn) == text) {
                             throw UtilityException("IDENTICAL ISBN ERROR");
+                        }
+                        if (interface->IsbnIsOccupied(text)) {
+                            throw UtilityException("ISBN IS OCCUPIED ERROR");
                         }
                         new_info.isbn = text;
                     }

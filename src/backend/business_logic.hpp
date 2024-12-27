@@ -81,6 +81,8 @@ namespace norb {
         virtual std::vector<Action> ReportEmployee() = 0;
 
         virtual Book GetSelectedBook() = 0;
+
+        virtual bool IsbnIsOccupied(const std::string &) = 0;
     };
 
     // This class implements the interface.
@@ -142,6 +144,8 @@ namespace norb {
         std::vector<Action> ReportEmployee() override;
 
         Book GetSelectedBook() override;
+
+        bool IsbnIsOccupied(const std::string &) override;
 
     private:
         std::unique_ptr<GlobalAssetManager> manager;

@@ -37,6 +37,10 @@ cd generated/ || exit 1
 if $clean_flag; then
     find . -maxdepth 2 -name "*.bin" -delete
     find . -maxdepth 2 -name "*.log" -delete
+    cd ..
+    find . -maxdepth 1 -name "*.bin" -delete
+    find . -maxdepth 1 -name "*.log" -delete
+    cd generated/ || exit 1
 fi
 
 # Loop through test cases

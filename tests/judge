@@ -10,6 +10,7 @@ from typing import List, Tuple
 timeout_secs = 30
 
 testpoints = {
+  'custom': [[i] for i in range(1,2)],
   'basic': [ [ i ] for i in range(1, 7) ] +
            [ [ f'7/{i}' for i in (1, 2, 3) ], [ f'8/{i}' for i in range(1, 101) ] ],
   'advanced': [ [ f'{i}/{j}' for j in range(1, 11 if i != 3 else 6) ] for i in range(1, 6) ],
