@@ -289,4 +289,13 @@ namespace norb {
         return !manager->book_manager->FindByIsbn(isbn).empty();
     }
 
+    void BusinessLogicImplement::DebugPrintAccountInfo() {
+        manager->account_manager->DebugPrintAccountInfo();
+    }
+
+    void BusinessLogicImplement::DebugPrintBookkeeperInfo() {
+        manager->book_manager->DebugPrintBookkeeperInfo();
+    }
+
+
 }

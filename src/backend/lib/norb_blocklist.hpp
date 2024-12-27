@@ -54,6 +54,8 @@ namespace norb {
 
             std::vector<T_Val> valAsVector();
 
+            std::vector<std::pair<T_Key, T_Val>> asDict();
+
             T_Val findFirst(T_Key key);
 
         private:

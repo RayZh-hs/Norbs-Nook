@@ -109,6 +109,13 @@ namespace norb {
 
         [[nodiscard]] int GetCurPrivilege() const;
 
+        void DebugPrintAccountInfo () const {
+            auto accounts = account_list->asDict();
+            for (auto i : accounts) {
+                std::cout << i.first << "\t:\t" << i.second << '\n';
+            }
+        }
+
     private:
         // account_list is a map from the hash of userid to the full information.
         typedef algo::FiledBlockList<lld, Account> account_list_t_;

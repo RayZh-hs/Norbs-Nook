@@ -50,7 +50,7 @@ namespace norb::norbs_nook_constants {
     namespace log_constants {
         constexpr Logger::level log_level                   = Logger::level::DEBUG;
         inline std::ostream& logger_use_ostream             = std::cerr;
-        const inline std::string log_name                   = "generated/logs/norbs_nook_logging.log";
+        const inline std::string log_name                   = "generated/logs/norbs_nook_logging.log.right";
     }
 
     namespace validation_constants {

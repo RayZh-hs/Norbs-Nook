@@ -1,4 +1,8 @@
 su root PKX4ga2
+debug account
+debug book
+logout
+su root PKX4ga2
 logout
 select 978-0-346-59823-2
 modify -name="fair" -keyword="douse" -price=5.22
@@ -83,6 +87,10 @@ import 10 1258.56
 logout
 register iRnCHWn8p5FgbzhUCMzTgIyUl 5eCbH_1WHi4AaEH9QrV9Wsi KarenMelton
 su BHoe6QATTCN2dpznHX5ko5YKl IEh
+su root PKX4ga2
+debug account
+debug book
+logout
 buy 978-1-261-59338-8 1
 select 978-0-7827-9310-9
 modify -name="perilous" -author="JefferyHill" -keyword="tulle|lordosis|incessant|purslane" -price=328.80

@@ -3,14 +3,14 @@
 # Navigate to the cmake-build-debug directory
 cd cmake-build-debug || { echo "Error: Could not navigate to cmake-build-debug/"; exit 1; }
 
-# Check if output_capture.out exists
+# Check if output_capture_wrong.out exists
 if [ ! -f "output_capture.out" ]; then
   echo "Error: output_capture.out not found in cmake-build-debug/"
   exit 1
 fi
 
 # Delete lines starting with "LINE" using sed in-place
-sed -i '/^LINE/d' output_capture.out
+sed -i '/^LINE/d' output_capture_wrong.out
 
 echo "Lines starting with 'LINE' removed from output_capture.out"
 

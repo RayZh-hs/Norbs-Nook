@@ -48,9 +48,9 @@ namespace norb::norbs_nook_constants {
     }
 
     namespace log_constants {
-        constexpr Logger::level log_level                   = Logger::level::NONE;
+        constexpr Logger::level log_level                   = Logger::level::DEBUG;
         inline std::ostream& logger_use_ostream             = std::cerr;
-        const inline std::string log_name                   = "norbs_nook_logging.log";
+        const inline std::string log_name                   = "norbs_nook_logging.wrong.out";
     }
 
     namespace validation_constants {
@@ -86,5 +86,8 @@ namespace norb::norbs_nook_constants {
         const inline std::regex regex_report_finance           (R"(^\ *report\ +finance\ *$)");
         const inline std::regex regex_report_employee          (R"(^\ *report\ +employee\ *$)");
         const inline std::regex regex_log                      (R"(^\ *log\ *$)");
+
+        const inline std::regex regex_debug_account            (R"(^\ *debug account\ *$)");
+        const inline std::regex regex_debug_book               (R"(^\ *debug book\ *$)");
     }
 }

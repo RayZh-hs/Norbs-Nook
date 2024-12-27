@@ -44,6 +44,6 @@ set(MAIN_CPP
 
 add_executable(code ${MAIN_CPP} ${COMMON_DEPENDENCIES})
 
-#set_target_properties(code PROPERTIES
-#        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
-#)
+set_target_properties(code PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
+)

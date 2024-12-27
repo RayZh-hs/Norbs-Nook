@@ -17,8 +17,9 @@ namespace norb {
     void CommandlineUserInterface::Run() {
         std::cerr << "[Hello World] from user_interface.cpp. This is Norb's Nook, up and running." << std::endl;
         // Run the main cycle.
-        int line = 1;
-        freopen("output_capture.out", "w", stdout);
+        int line = 118;
+        // int line = 1;
+        freopen("output_capture.wrong.out", "w", stdout);
         while (true) {
             // Read in the next line of action.
             std::cout << "LINE " << line++ << '\n';
@@ -207,6 +208,19 @@ namespace norb {
                 }
                 else if (matchRegex(line, regex_log)) {
                     // TODO: log
+                }
+                // TODO For Debug purposes. Remove in final version !
+                else if (matchRegex(line, regex_debug_account)) {
+                    std::cout << "\t ACCOUNTS:\n";
+                    // auto accounts = interface->GetAccounts();
+                    // for (auto i : accounts) {
+                    //     std::cout << i << '\n';
+                    // }
+                    interface->DebugPrintAccountInfo();
+                }
+                else if (matchRegex(line, regex_debug_book)) {
+                    std::cout << "\t BOOKKEEPER:\n";
+                    interface->DebugPrintBookkeeperInfo();
                 }
                 else {
                     throw UtilityException("UNKNOWN LINE ERROR");

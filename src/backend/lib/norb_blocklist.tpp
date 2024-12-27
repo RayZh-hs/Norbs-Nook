@@ -413,6 +413,19 @@ namespace norb {
             body.name[cur] = key;
             body.val[cur] = val;
         }
+
+        template<typename T_Key, typename T_Val>
+        std::vector<std::pair<T_Key, T_Val>> FiledBlockList<T_Key, T_Val>::asDict() {
+            std::vector<std::pair<T_Key, T_Val>> ret;
+            for (auto h : head) {
+                FiledBlockBodyNode body;
+                body.read(f_body, h.pointer);
+                for (int i = 0; i < h.len; i++) {
+                    ret.push_back(std::make_pair(body.name[i], body.val[i]));
+                }
+            }
+            return ret;
+        }
     }
 }
 

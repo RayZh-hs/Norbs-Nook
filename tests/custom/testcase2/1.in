@@ -1,0 +1,14 @@
+su root sjtu
+select book-isbn-1
+modify -name="A_Minecraft_Handbook" -author="norb"
+select book-isbn-2
+modify -name="A_Unity_Handbook" -author="norb"
+select book-isbn-3
+modify -name="An_Unreal_Engine_Handbook" -author="norb"
+select book-isbn-4
+modify -name="A_Blender_Handbook" -author="norb"
+select book-isbn-5
+modify -name="A_Houdini_Handbook" -author="norb"
+select book-isbn-6
+modify -name="A_Norb_Handbook" -author="norb"
+show

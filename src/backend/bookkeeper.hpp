@@ -107,6 +107,29 @@ namespace norb {
         // Several used constexpr vars
         static constexpr int npos = -1;
 
+        inline void DebugPrintBookkeeperInfo() {
+            std::cout << "\tbook_list: " << '\n';
+            for (auto i : book_list->asDict()) {
+                std::cout << i.first << "\t:\t" << i.second << '\n';
+            }
+            std::cout << "\tisbn_id_list: " << '\n';
+            for (auto i : isbn_id_list->asDict()) {
+                std::cout << i.first << "\t:\t" << i.second << '\n';
+            }
+            std::cout << "\tname_id_list: " << '\n';
+            for (auto i : name_id_list->asDict()) {
+                std::cout << i.first << "\t:\t" << i.second << '\n';
+            }
+            std::cout << "\tauthor_id_list: " << '\n';
+            for (auto i : author_id_list->asDict()) {
+                std::cout << i.first << "\t:\t" << i.second << '\n';
+            }
+            std::cout << "\thashed_keyword_id_list: " << '\n';
+            for (auto i : hashed_keyword_id_list->asDict()) {
+                std::cout << i.first << "\t:\t" << i.second << '\n';
+            }
+        }
+
     private:
         // The f_uid is a reference passed in by global, and managed externally by norb::GlobalVariableManager in global.hpp
         std::fstream &f_uid;
