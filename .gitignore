@@ -6,3 +6,5 @@ generated/logs/*
 
 venv
 venv/*
+
+snapshots/
