@@ -48,9 +48,9 @@ namespace norb::norbs_nook_constants {
     }
 
     namespace log_constants {
-        constexpr Logger::level log_level                   = Logger::level::DEBUG;
+        constexpr Logger::level log_level                   = Logger::level::NONE;
         inline std::ostream& logger_use_ostream             = std::cerr;
-        const inline std::string log_name                   = "norbs_nook_logging.wrong.out.roaming";
+        const inline std::string log_name                   = "norbs_nook_logging.log";
     }
 
     namespace validation_constants {
