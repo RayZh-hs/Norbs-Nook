@@ -7,6 +7,8 @@ namespace norb {
     // It does what you think it does.
     int stringToInteger(const std::string &);
     double stringToDouble(const std::string &);
+    std::string integerToString(const int &);
+    std::string doubleToString(const double &, int precision = 2);
 
     // The function unquotes a std::string, performing the action on the original string.
     // If the string does not match R(^\".*\"$), then it does nothing and returns false, otherwise it returns true.

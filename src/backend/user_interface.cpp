@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "norb_strlib.hpp"
+#include "norb_con.hpp"
 
 using namespace norb::norbs_nook_constants::validation_constants;
 
@@ -132,7 +133,7 @@ namespace norb {
                     interface->Select(group[1]);
                 }
                 else if (matchRegex(line, regex_modify)) {
-                    auto group = groupRegex(line, regex_modify);
+                        auto group = groupRegex(line, regex_modify);
                     auto map = extractUniqueKeyValuePairs(group[1]);
                     if (map.empty()) {
                         throw UtilityException("KEY NOT UNIQUE ERROR");
@@ -213,12 +214,50 @@ namespace norb {
                 }
                 else if (matchRegex(line, regex_report_finance)) {
                     // TODO: report finance
+                    auto finance_info = interface->ReportFinance();
+                    double net_revenue = 0;
+                    std::cout << std::fixed << std::setprecision(2);
+                    for (int i = 0; i < finance_info.size(); i++) {
+                        auto fin = finance_info[i];
+                        std::cout << i + 1 << "#:\t " << (fin > 0 ? con::boldGreen : con::boldRed) << (fin > 0 ? "+" : "-") << std::abs(fin) << con::clear;
+                        std::cout << '\t' << "Tot = ";
+                        net_revenue += fin;
+                        if (fin >= 0) {
+                            std::cout << con::underlineGreen << '+' << net_revenue << con::clear << '\n';
+                        }
+                        else {
+                            std::cout << con::underlineRed << net_revenue << con::clear << '\n';
+                        }
+                    }
+                    std::cout << con::boldYellow << "- Total Revenue: " << net_revenue << con::clear << '\n';
                 }
                 else if (matchRegex(line, regex_report_employee)) {
                     // TODO: report finance
+                    auto actions = interface->ReportEmployee();
+                    for (auto i : actions) {
+                        std::cout << i;
+                    }
                 }
                 else if (matchRegex(line, regex_log)) {
                     // TODO: log
+                    std::cout << con::clear;
+                    for (const auto& i : interface->GetLog()) {
+                        auto type = Logger::WhichLevel(i);
+                        switch (type) {
+                            case Logger::level::DEBUG:
+                                std::cout << con::colorCyan;    break;
+                            case Logger::level::INFO:
+                                std::cout << con::colorGreen;   break;
+                            case Logger::level::WARNING:
+                                std::cout << con::colorYellow;  break;
+                            case Logger::level::ERROR:
+                                std::cout << con::colorRed;     break;
+                            default:
+                                std::cout << con::clear;        break;
+                        }
+                        std::cout << i;
+                        std::cout << con::clear << '\n';
+                    }
                 }
                 //! TODO For Debug purposes. Remove in final version !
                 // else if (matchRegex(line, regex_debug_account)) {

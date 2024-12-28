@@ -1,5 +1,7 @@
 #include "business_logic.hpp"
 
+#include <norb_strlib.hpp>
+
 namespace norb {
     BusinessLogicInterface::~BusinessLogicInterface() = default;
 
@@ -46,6 +48,13 @@ namespace norb {
                 manager->action_manager->RegisterAction({
                     user.username,
                     "switched to user: " + std::string(manager->account_manager->GetActiveUser().username)
+                });
+            }
+            const auto new_user = manager->account_manager->GetActiveUser();
+            if (new_user.privilege == 3) {
+                manager->action_manager->RegisterAction({
+                    new_user.username,
+                    "logged in"
                 });
             }
             manager->book_manager->StackCreate();
@@ -208,6 +217,11 @@ namespace norb {
         RequirePrivilege(3);
         manager->book_manager->Select(isbn);
         manager->logger->Log(level::INFO, "Selection successful");
+        const auto user = manager->account_manager->GetActiveUser();
+        manager->action_manager->RegisterAction({
+            user.username,
+            "selected book" + isbn
+        });
     }
 
     void BusinessLogicImplement::Modify(const Book &new_info) {
@@ -218,6 +232,11 @@ namespace norb {
             throw UtilityException("MODIFY ERROR");
         } else {
             manager->logger->Log(level::INFO, "Modification successful!");
+            const auto user = manager->account_manager->GetActiveUser();
+            manager->action_manager->RegisterAction({
+                user.username,
+                "modified selected book"
+            });
         }
     }
 
@@ -227,6 +246,11 @@ namespace norb {
         if (manager->book_manager->Import(quantity, total_cost)) {
             manager->logger->Log(level::INFO, "Import successful!");
             manager->action_manager->RegisterTransaction(-total_cost);
+            const auto user = manager->account_manager->GetActiveUser();
+            manager->action_manager->RegisterAction({
+                user.username,
+                "imported " + integerToString(quantity) + "copies of selected book at $" + doubleToString(total_cost)
+            });
         } else {
             manager->logger->Log(level::WARNING, "Import failed!");
             throw UtilityException("IMPORT ERROR");

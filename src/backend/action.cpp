@@ -3,11 +3,13 @@
 //
 
 #include "action.hpp"
+#include "norb_con.hpp"
 
 namespace norb {
 
     std::ostream &operator<<(std::ostream &os, const Action &action) {
-        os << '[' << action.user_id << ']' << '\t' << action.description << '\n';
+        os << con::clear;
+        os << con::underlineYellow << '[' << action.user_id << ']' << con::clear << '\t' << action.description << '\n';
         return os;
     }
 

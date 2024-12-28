@@ -1,5 +1,6 @@
 #include "norb_strlib.hpp"
 
+#include <iomanip>
 #include <regex>
 
 int norb::stringToInteger(const std::string &str) {
@@ -19,9 +20,28 @@ double norb::stringToDouble(const std::string &str) {
     stream >> value;
     if (!stream.eof()) stream >> std::ws;
     if (stream.fail() || !stream.eof()) {
-        throw std::runtime_error("norb_strlib: INVALID INTEGER");
+        throw std::runtime_error("norb_strlib: INVALID DOUBLE");
     }
     return value;
+}
+
+std::string norb::integerToString(const int &value) {
+    std::ostringstream stream;
+    stream << value;
+    if (stream.fail()) {
+        throw std::runtime_error("norb_strlib: INVALID VALUE");
+    }
+    return stream.str();
+}
+
+std::string norb::doubleToString(const double &value, const int precision) {
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(precision);
+    stream << value;
+    if (stream.fail()) {
+        throw std::runtime_error("norb_strlib: INVALID VALUE");
+    }
+    return stream.str();
 }
 
 // "abc"
