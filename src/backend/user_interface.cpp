@@ -280,7 +280,7 @@ namespace norb {
                 break;
             }
             catch (UtilityException &exception) {
-                std::cerr << exception.what() << '\n';
+                //! std::cerr << exception.what() << '\n';
                 std::cout << "Invalid" << '\n';
                 continue;
             }

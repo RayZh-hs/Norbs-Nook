@@ -20,8 +20,8 @@ namespace norb {
         template<typename T_Key, typename T_Val>
         class FiledBlockList {
         public:
-            // static constexpr int cell_size = 320;
-            static constexpr int cell_size = 2;
+            static constexpr int cell_size = 320;
+            // static constexpr int cell_size = 2;
             static constexpr int cell_break_threshold = cell_size * 2;
 
             // In this revised version, the global_reader_ fstream is externally managed.
