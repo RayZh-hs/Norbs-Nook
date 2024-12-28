@@ -8,3 +8,30 @@ venv
 venv/*
 
 snapshots/
+
+# Web-based items
+
+# Logs
+src/frontend/norbs-nook-frontend/logs
+src/frontend/norbs-nook-frontend/*.log
+src/frontend/norbs-nook-frontend/npm-debug.log*
+src/frontend/norbs-nook-frontend/yarn-debug.log*
+src/frontend/norbs-nook-frontend/yarn-error.log*
+src/frontend/norbs-nook-frontend/pnpm-debug.log*
+src/frontend/norbs-nook-frontend/lerna-debug.log*
+
+src/frontend/norbs-nook-frontend/node_modules
+src/frontend/norbs-nook-frontend/dist
+src/frontend/norbs-nook-frontend/dist-ssr
+src/frontend/norbs-nook-frontend/*.local
+
+# Editor directories and files
+src/frontend/norbs-nook-frontend/.vscode/*
+src/frontend/norbs-nook-frontend/!.vscode/extensions.json
+src/frontend/norbs-nook-frontend/.idea
+src/frontend/norbs-nook-frontend/.DS_Store
+src/frontend/norbs-nook-frontend/*.suo
+src/frontend/norbs-nook-frontend/*.ntvs*
+src/frontend/norbs-nook-frontend/*.njsproj
+src/frontend/norbs-nook-frontend/*.sln
+src/frontend/norbs-nook-frontend/*.sw?
