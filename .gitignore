@@ -35,3 +35,9 @@ src/frontend/norbs-nook-frontend/*.ntvs*
 src/frontend/norbs-nook-frontend/*.njsproj
 src/frontend/norbs-nook-frontend/*.sln
 src/frontend/norbs-nook-frontend/*.sw?
+
+src/api/.vscode/
+src/api/.vscode/*
+
+# Generated Runtime
+src/api/builds/*
