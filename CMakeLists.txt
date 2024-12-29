@@ -31,19 +31,23 @@ foreach (TEST_SOURCE ${TEST_SOURCES})
 
     # Add an executable for this test
     add_executable(${TEST_NAME} ${TEST_SOURCE} ${COMMON_DEPENDENCIES})
-
-    # Link any required libraries if needed (e.g., GTest, Boost)
-    # target_link_libraries(${TEST_NAME} PRIVATE gtest gtest_main)
 endforeach ()
 
 # Create the final output
 
-set(MAIN_CPP
-        src/backend/main.cpp
+set(CUI_MAIN_CPP
+        src/backend/main_cui.cpp
+)
+set(GUI_MAIN_CPP
+        src/backend/main_gui.cpp
 )
 
-add_executable(code ${MAIN_CPP} ${COMMON_DEPENDENCIES})
+add_executable(code ${CUI_MAIN_CPP} ${COMMON_DEPENDENCIES})
+add_executable(gui_runtime ${GUI_MAIN_CPP} ${COMMON_DEPENDENCIES})
 
 set_target_properties(code PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+set_target_properties(gui_runtime PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/src/api/builds/
 )

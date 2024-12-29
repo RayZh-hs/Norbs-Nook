@@ -5,10 +5,15 @@
 
 #include "norb_strlib.hpp"
 #include "norb_con.hpp"
+#include "json.hpp"     // Used for GUI, since all inputs and outputs are json strings.
 
 using namespace norb::norbs_nook_constants::validation_constants;
 
 namespace norb {
+
+    // The Commandline User Interface is the one that the OJ accepts.
+    // All the inputs and outputs strictly follow the requirements.
+
     CommandlineUserInterface::CommandlineUserInterface(std::unique_ptr<norb::BusinessLogicInterface> moved_interface) {
         interface = std::move(moved_interface);
     }
@@ -292,5 +297,19 @@ namespace norb {
             }
         }
     }
+
+    // The Graphical User Interface is used for local GUI builds.
+    // All inputs and outputs are formatted as JSON objects so that flask can parse it and/or pass it more easily.
+
+    GraphicalUserInterface::GraphicalUserInterface(std::unique_ptr<norb::BusinessLogicInterface> moved_interface) {
+        interface = std::move(moved_interface);
+    }
+
+    GraphicalUserInterface::~GraphicalUserInterface() = default;
+
+    void GraphicalUserInterface::Run() {
+        std::cout << "Hello World";
+    }
+
 
 }

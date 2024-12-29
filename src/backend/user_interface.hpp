@@ -16,4 +16,15 @@ namespace norb {
     private:
         std::unique_ptr<norb::BusinessLogicInterface> interface;
     };
+
+    class GraphicalUserInterface {
+    public:
+        explicit GraphicalUserInterface(std::unique_ptr<norb::BusinessLogicInterface>);
+        ~GraphicalUserInterface();
+
+        void Run();
+
+    private:
+        std::unique_ptr<norb::BusinessLogicInterface> interface;
+    };
 }

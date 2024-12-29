@@ -59,7 +59,7 @@ The main function relies on all the following classes:
 - **BookManager** (from bookkeeper.hpp): for maintaining book info in the shop.
 - **ActionManager** (from bookkeeper.hpp): for maintaining actions.
 - **Logger** (from logging.hpp): for creating logs and displaying them.
-- **UserInterfaceHandler** (from main.cpp): for handling user input/output.
+- **UserInterfaceHandler** (from main_cui.cpp): for handling user input/output.
 
 ### Functionalities
 
