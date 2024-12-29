@@ -15,10 +15,12 @@
                         <n-checkbox v-model:checked="signinForm.remember">Remember me</n-checkbox>
                     </n-form-item>
                     <n-form-item class="a-fade-in a-delay-5">
-                        <n-button type="primary" @click="handleSubmitSignin" class="full-width-button">Sign In</n-button>
+                        <n-button type="primary" @click="handleSubmitSignin" class="full-width-button">Sign
+                            In</n-button>
                     </n-form-item>
                 </n-form>
-                <a class="link-away link-away--to-reg a-fade-in a-delay-7" @click="register = true">Not yet registered? Click here to join.</a>
+                <a class="link-away link-away--to-reg a-fade-in a-delay-7" @click="register = true">Not yet registered?
+                    Click here to join.</a>
             </div>
             <div class="register__box">
                 <h1 class="signin__title a-fade-in">Register</h1>
@@ -31,11 +33,11 @@
                             placeholder="Enter your password" />
                     </n-form-item>
                     <n-form-item label="Username" path="username" size="large">
-                        <n-input v-model:value="registerForm.username" type="password"
-                            placeholder="Enter your password" />
+                        <n-input v-model:value="registerForm.username" placeholder="Enter your password" />
                     </n-form-item>
                     <n-form-item>
-                        <n-button type="primary" @click="handleSubmitRegister" class="full-width-button">Sign In</n-button>
+                        <n-button type="primary" @click="handleSubmitRegister" class="full-width-button">Sign
+                            Up</n-button>
                     </n-form-item>
                 </n-form>
                 <a class="link-away link-away--to-signin" @click="register = false">Have an account? Sign in here.</a>
@@ -48,6 +50,7 @@
 import { ref, reactive } from 'vue'
 import { useMessage, type FormInst } from 'naive-ui'
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter();
 const message = useMessage();
@@ -99,46 +102,52 @@ const handleSubmitSignin = async () => {
         const isValid = await signinFormRef.value?.validate();
         if (!isValid) return;
 
-        // Replace with your actual API call
-        const response = await simulateSignin(signinForm);
-        if (response.success) {
-            message.success('Sign in successful!');
+        // TODO: Get this real api call working!
+        const response = await axios.post('http://localhost:5000/api/login', { user_id: signinForm.userid, password: signinForm.password });
+        console.log("Got response: ", response);
+        // if (response.success) {
+        //     message.success('Sign in successful!');
+        //     await router.push('/dashboard'); // Replace with your desired route
+        // } else {
+        //     message.error(response.message);
+        // }
+        if (response.data.status == 'success') {
+            message.success('Welcome back!');
             await router.push('/dashboard'); // Replace with your desired route
         } else {
-            message.error(response.message);
+            message.error(response.data.message);
         }
     } catch (error) {
         message.error('An error occurred during signing in');
-        console.error('Signup error:', error);
+        console.error('Sign In error:', error);
     }
 };
 
-// Simulate API call.
-const simulateSignin = async (userData: any) => {
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network latency
-    if (userData.userid === 'root' && userData.password === 'sjtu') {
-        return { success: true, message: '' };
-    } else {
-        return { success: false, message: 'Invalid username or password' };
-    }
-};
+//// Simulate API call.
+// const simulateSignin = async (userData: any) => {
+//     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network latency
+//     if (userData.userid === 'root' && userData.password === 'sjtu') {
+//         return { success: true, message: '' };
+//     } else {
+//         return { success: false, message: 'Invalid username or password' };
+//     }
+// };
 
 const handleSubmitRegister = async () => {
     try {
         const isValid = await registerFormRef.value?.validate();
         if (!isValid) return;
 
-        // Replace with your actual API call
-        const response = await simulateRegister(registerForm);
-        if (response.success) {
-            message.success('Sign in successful!');
-            await router.push('/dashboard'); // Replace with your desired route
+        const response = await axios.post('http://localhost:5000/api/register', { user_id: registerForm.userid, password: registerForm.password, username: registerForm.username });
+        if (response.data.status == 'success') {
+            message.success('Welcome to the community!');
+            message.success('Please log in once more to continue');
         } else {
-            message.error(response.message);
+            message.error(response.data.message);
         }
     } catch (error) {
         message.error('An error occurred during sign in');
-        console.error('Signup error:', error);
+        console.error('Register error:', error);
     }
 };
 

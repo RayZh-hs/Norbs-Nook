@@ -37,6 +37,7 @@ endforeach ()
 
 set(CUI_MAIN_CPP
         src/backend/main_cui.cpp
+        src/backend/static/constants.hpp
 )
 set(GUI_MAIN_CPP
         src/backend/main_gui.cpp
@@ -51,3 +52,5 @@ set_target_properties(code PROPERTIES
 set_target_properties(gui_runtime PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/src/api/builds/
 )
+
+target_compile_definitions(gui_runtime PRIVATE USE_RUNTIME_CONSTANTS)

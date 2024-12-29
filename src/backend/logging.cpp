@@ -33,9 +33,9 @@ namespace norb {
         assert(f_log.good());
         f_log.seekp(0, std::ios::end);
         assert(f_log.good());
-        f_log << '[' << Logger::level_name.find(level_)->second << ']' << '\t' << msg << std::endl;
+        f_log << '[' << Logger::level_name.find(level_)->second << ']' << ' ' << msg << std::endl;
         if (screen_log_level <= level_)
-            os << '[' << Logger::level_name.find(level_)->second << ']' << '\t' << msg << std::endl;
+            os << '[' << Logger::level_name.find(level_)->second << ']' << ' ' << msg << std::endl;
     }
 
     void Logger::Log(Logger::level level_, std::string msg) {
@@ -46,9 +46,9 @@ namespace norb {
         assert(f_log.good());
         f_log.seekp(0, std::ios::end);
         assert(f_log.good());
-        f_log << '[' << Logger::level_name.find(level_)->second << ']' << '\t' << msg << std::endl;
+        f_log << '[' << Logger::level_name.find(level_)->second << ']' << ' ' << msg << std::endl;
         if (screen_log_level <= level_)
-            os << '[' << Logger::level_name.find(level_)->second << ']' << '\t' << msg << std::endl;
+            os << '[' << Logger::level_name.find(level_)->second << ']' << ' ' << msg << std::endl;
     }
 
     // template<typename T_>

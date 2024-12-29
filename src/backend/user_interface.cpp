@@ -7,6 +7,7 @@
 #include "norb_con.hpp"
 #include "json.hpp"     // Used for GUI, since all inputs and outputs are json strings.
 
+using json = nlohmann::json;
 using namespace norb::norbs_nook_constants::validation_constants;
 
 namespace norb {
@@ -308,7 +309,57 @@ namespace norb {
     GraphicalUserInterface::~GraphicalUserInterface() = default;
 
     void GraphicalUserInterface::Run() {
-        std::cout << "Hello World";
+        freopen("./generated/logs/cerr-capture.log", "w", stderr);
+        while(true) {
+            try {
+                json input;
+                std::cin >> input;
+                std::cerr << "[INFO] Received JSON: " << input << '\n';
+                assert(std::cin.good());
+                std::cerr << "[DEBUG] std::cin is still good" << '\n';
+                std::string mode = input["mode"];
+                if (mode == "login") {
+                    try {
+                        interface->SwitchUser(input["userid"], input["password"]);
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"message", "successfully logged in"}
+                        }) << '\n';
+                        std::cerr << "[INFO] Login Successful" << '\n';
+                    }
+                    catch (UtilityException &) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "wrong userid-password combination"}
+                        }) << '\n';
+                        std::cerr << "[WARNING] Login Failed" << '\n';
+                    }
+                }
+                else if (mode == "register") {
+                    try {
+                        interface->Register(input["userid"], input["password"], input["username"]);
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"message", "successful registration"}
+                        }) << '\n';
+                        std::cerr << "[INFO] Registration Successful" << '\n';
+                    }
+                    catch (UtilityException &) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "please select another user-id"}
+                        }) << '\n';
+                        std::cerr << "[WARNING] Registration Failed" << '\n';
+                    }
+                }
+            }
+            catch (QuitUtilityException &) {
+                return;
+            }
+            catch (...) {
+                std::rethrow_exception(std::current_exception());
+            }
+        }
     }
 
 

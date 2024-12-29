@@ -3,9 +3,10 @@ cmake-build-debug/*
 
 generated/data/*
 generated/logs/*
+src/api/generated/data/*
+src/api/generated/logs/*
 
 venv
-venv/*
 
 snapshots/
 
@@ -37,7 +38,6 @@ src/frontend/norbs-nook-frontend/*.sln
 src/frontend/norbs-nook-frontend/*.sw?
 
 src/api/.vscode/
-src/api/.vscode/*
 
 # Generated Runtime
 src/api/builds/*
