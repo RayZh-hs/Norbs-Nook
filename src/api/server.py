@@ -5,12 +5,12 @@ from flask_cors import CORS
 import logging
 
 from runtime import Runtime
-
-RUNTIME_PATH = "./builds/gui_runtime"
+from public import *
 
 app = Flask(__name__)
-CORS(app=app, origins=['http://localhost:5173'])
+CORS(app=app, origins=ALLOW_CORS_URLS)
 runtime = Runtime(RUNTIME_PATH)
+logger = logging.getLogger(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
@@ -19,7 +19,7 @@ def index():
 @app.route("/api/login", methods=["POST"])
 def login():
     data = request.json
-    logging.log(logging.INFO, f"Received data: {data}")
+    logger.log(logging.INFO, f"On Login(): Received data: {data}")
     user_id = data.get('user_id')
     password = data.get('password')
     
@@ -37,13 +37,13 @@ def login():
         response = runtime.query(query_text)
         return jsonify(json.loads(response))
     except Exception as e:
-        logging.log(logging.ERROR, e)
+        logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
 @app.route("/api/register", methods=["POST"])
 def register():
     data = request.json
-    logging.log(logging.INFO, f"Received data: {data}")
+    logger.log(logging.INFO, f"On Register(): Received data: {data}")
     user_id = data.get('user_id')
     password = data.get('password')
     username = data.get('username')
@@ -63,12 +63,27 @@ def register():
         response = runtime.query(query_text)
         return jsonify(json.loads(response))
     except Exception as e:
-        logging.log(logging.ERROR, e)
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/active_account_info", methods=["POST", "GET"])
+def active_account_info():
+    logger.log(logging.INFO, f"On ActiveAccountInfo()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "active_account_info",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
 
 if __name__ == '__main__':
-    # Display the logs on the screen
     logging.basicConfig(level=logging.DEBUG)
     runtime.start()
     app.run(port=5000)

@@ -82,6 +82,33 @@ button:focus-visible {
   }
 }
 
+/* Positioning */
+.left-top-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.right-top-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.left-middle-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.right-middle-wrapper {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
 /* Animations */
 
 .a-fade-in {

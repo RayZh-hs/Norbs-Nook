@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/vue": "^1.0.31",
+    "@vicons/carbon": "^0.13.0",
     "@vicons/ionicons5": "^0.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/runtime-dom": "^3.5.13",

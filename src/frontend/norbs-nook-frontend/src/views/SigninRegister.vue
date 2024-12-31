@@ -5,7 +5,7 @@
                 <h1 class="signin__title a-fade-in">Sign In</h1>
                 <n-form :model="signinForm" :rules="signin_rules" ref="signinFormRef">
                     <n-form-item label="User ID" path="userid" size="large" class="a-fade-in a-delay-2">
-                        <n-input v-model:value="signinForm.userid" placeholder="Enter your username" />
+                        <n-input v-model:value="signinForm.userid" placeholder="Enter your user-id" />
                     </n-form-item>
                     <n-form-item label="Password" path="password" size="large" class="a-fade-in a-delay-3">
                         <n-input v-model:value="signinForm.password" type="password"
@@ -26,14 +26,14 @@
                 <h1 class="signin__title a-fade-in">Register</h1>
                 <n-form :model="registerForm" :rules="register_rules" ref="registerFormRef">
                     <n-form-item label="User ID" path="userid" size="large">
-                        <n-input v-model:value="registerForm.userid" placeholder="Enter your username" />
+                        <n-input v-model:value="registerForm.userid" placeholder="Enter your user-id" />
                     </n-form-item>
                     <n-form-item label="Password" path="password" size="large">
                         <n-input v-model:value="registerForm.password" type="password"
                             placeholder="Enter your password" />
                     </n-form-item>
                     <n-form-item label="Username" path="username" size="large">
-                        <n-input v-model:value="registerForm.username" placeholder="Enter your password" />
+                        <n-input v-model:value="registerForm.username" placeholder="Enter your username" />
                     </n-form-item>
                     <n-form-item>
                         <n-button type="primary" @click="handleSubmitRegister" class="full-width-button">Sign
@@ -107,13 +107,13 @@ const handleSubmitSignin = async () => {
         console.log("Got response: ", response);
         // if (response.success) {
         //     message.success('Sign in successful!');
-        //     await router.push('/dashboard'); // Replace with your desired route
+        //     await router.push('/dashboard');
         // } else {
         //     message.error(response.message);
         // }
         if (response.data.status == 'success') {
-            message.success('Welcome back!');
-            await router.push('/dashboard'); // Replace with your desired route
+            message.success('Sign in successful!');
+            await router.push('/dashboard');
         } else {
             message.error(response.data.message);
         }
@@ -146,7 +146,7 @@ const handleSubmitRegister = async () => {
             message.error(response.data.message);
         }
     } catch (error) {
-        message.error('An error occurred during sign in');
+        message.error('An error occurred during signing up');
         console.error('Register error:', error);
     }
 };

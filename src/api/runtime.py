@@ -9,13 +9,17 @@ The compiled runtime will by default be at src/api/builds/wui_runtime.
 """
 
 import subprocess
-import logging
 import time         # A little delay for the runtime to react shouldn't hurt.
+import logging
+
+from public import *
+logger = logging.getLogger(__name__)
 
 class Runtime:
     def __init__(self, runtime_path: str):
         self.runtime_path = runtime_path
         self.process = None
+        self.lock = False
     
     def start(self):
         if self.process is not None:
@@ -56,16 +60,26 @@ class Runtime:
         return self.process.stdout.read()
     
     def query(self, data: str):
-        logging.log(logging.INFO, f"Querying runtime with: {data}")
+        while self.lock:
+            time.sleep(0.1)
+        self.lock = True
+        logger.log(logging.DEBUG, "Lock acquired.")
+        logger.log(logging.INFO, f"Querying runtime with: {data}")
         if self.process is None:
             raise RuntimeError("Runtime is not running.")
         self.write(data)
-        logging.log(logging.INFO, "Sent data; Waiting for response...")
+        logger.log(logging.INFO, "Sent data; Waiting for response...")
         try:
-            time.sleep(0.3)
-            line = self.read_line()
-            logging.log(logging.INFO, f"Received response: {line}")
+            line = ""
+            while not line:
+                line = self.read_line()
+                time.sleep(0.1)
+            logger.log(logging.INFO, f"Received response: {line}".strip())
+            self.lock = False
+            logger.log(logging.DEBUG, "Lock released.")
             return line
         except subprocess.TimeoutExpired:
-            logging.log(logging.ERROR, "Query timed out.")
+            logger.log(logging.ERROR, "Query timed out.")
+            self.lock = False
+            logger.log(logging.DEBUG, "Lock released.")
             raise TimeoutError("Query timed out.")

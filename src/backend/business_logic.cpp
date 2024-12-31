@@ -321,5 +321,9 @@ namespace norb {
         manager->book_manager->DebugPrintBookkeeperInfo();
     }
 
+    Account BusinessLogicImplement::GetActiveAccount() {
+        return manager->account_manager->GetActiveUser();
+    }
+
 
 }

@@ -352,6 +352,19 @@ namespace norb {
                         std::cerr << "[WARNING] Registration Failed" << '\n';
                     }
                 }
+                else if (mode == "active_account_info") {
+                    Account account = interface->GetActiveAccount();
+                    std::cout << json::object({
+                        {"status", "success"},
+                        {"content", {
+                            {"userid", std::string(account.userid)},
+                            {"username", std::string(account.username)},
+                            {"hashed_password", account.hashed_password},
+                            {"privilege", account.privilege}
+                        }}
+                    }) << '\n';
+                    std::cerr << "[INFO] GetActiveAccountInfo Successful" << '\n';
+                }
             }
             catch (QuitUtilityException &) {
                 return;
