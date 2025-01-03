@@ -448,7 +448,7 @@ namespace norb {
                         std::cout << json::object({
                             {"status", "success"},
                         }) << '\n';
-                        std::cerr << "Modify Succeeded" << '\n';
+                        std::cerr << "[INFO] Modify Succeeded" << '\n';
                     } catch (UtilityException &e) {
                         std::cout << json::object({
                             {"status", "failure"},
@@ -456,6 +456,15 @@ namespace norb {
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
+                }
+                else if (mode == "logout") {
+                    interface->Logout();
+                    const bool moreUsers = interface->GetActiveAccount().privilege != 0;
+                    std::cout << json::object({
+                        {"status", "success"},
+                        {"more_users", moreUsers}
+                    }) << '\n';
+                    std::cerr << "[INFO] Logout Successful" << '\n';
                 }
             } catch (QuitUtilityException &) {
                 return;

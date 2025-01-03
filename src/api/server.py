@@ -226,6 +226,22 @@ def modify():
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
+@app.route("/api/logout", methods=["POST"])
+def logout():
+    logger.log(logging.INFO, f"On Logout()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "logout",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     runtime.start()

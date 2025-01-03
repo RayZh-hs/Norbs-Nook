@@ -54,8 +54,8 @@
                                         Logs
                                     </n-tooltip>
                                 </n-button>
-                                <n-button v-if="account_info.content.privilege >= 7" text style="outline: none;"
-                                    :style="{ 'font-size': action_font_size }">
+                                <n-button v-if="account_info.content.privilege >= 1" text style="outline: none;"
+                                    :style="{ 'font-size': action_font_size }" @click="handleLogout">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
@@ -155,5 +155,30 @@ const handleSearch = (search_data: any) => {
     // Then redirect to the Books page:
     router.push("books");
 };
+
+const handleLogout = async () => {
+    try {
+        const response = await axios.post('http://localhost:5000/api/logout');
+        if (response.data.status == 'success') {
+            message.success('Logged out successfully');
+            // Clear the account info from local storage:
+            localStorage.removeItem('account_info');
+            // Redirect to the login page if the user_stack is empty:
+            if (response.data.more_users == false) {
+                // router.push("login-register");
+                router.back();
+            }
+            // Update the current info:
+            fetchAccountInfo().then(() => {
+                message.info('Current User: ' + (account_info.value.content.username ? account_info.value.content.username : 'Guest'));
+            });
+        } else {
+            message.error('Failed to logout');
+        }
+    } catch (error) {
+        console.error("Error logging out:", error);
+        message.error('Failed to logout');
+    }
+}
 
 </script>
