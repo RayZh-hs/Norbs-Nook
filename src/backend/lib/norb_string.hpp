@@ -6,6 +6,7 @@
 #include "norb_alias.hpp"
 
 namespace norb {
+
     template <int max_len>
         class string : public std::array<char, max_len> {
 

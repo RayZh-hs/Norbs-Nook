@@ -82,6 +82,149 @@ def active_account_info():
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
+@app.route("/api/find_books", methods=["POST"])
+def find_books():
+    data = request.json
+    logger.log(logging.INFO, f"On FindBooks(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    query_mode = data.get('query_mode')
+    query_content = data.get('query_content')
+    query_keywords: list[str] = data.get('query_tags')
+    query_keywords: str = '|'.join(query_keywords)
+    try:
+        logger.log(logging.INFO, f"Query Mode: {query_mode}")
+        query_text = json.dumps({
+            "mode": "find_books",
+            "query_type": query_mode,
+            "content": query_keywords if query_mode == "keywords" else query_content,
+        })
+        response = runtime.query(query_text)
+        # turn the keywords in the response into lists
+        response = json.loads(response)
+        if (response["status"] == "success"):
+            for book in response["content"]:
+                book["keyword"] = book["keyword"].split("|")
+        logger.log(logging.INFO, f"Edited Response: {response}")
+        return jsonify(response)
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/buy_book", methods=["POST"])
+def buy_book():
+    data = request.json
+    logger.log(logging.INFO, f"On BuyBook(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    book_isbn = data.get('isbn')
+    buy_amount = data.get('amount')
+    try:
+        query_text = json.dumps({
+            "mode": "buy_book",
+            "isbn": book_isbn,
+            "amount": buy_amount,
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/import_book", methods=["POST"])
+def import_book():
+    data = request.json
+    logger.log(logging.INFO, f"On ImportBook(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    book_isbn = data.get('isbn')
+    book_amount = data.get('amount')
+    import_cost = data.get('cost')
+    # Convert the amount to integer; if it fails, return an error
+    try:
+        book_amount = int(book_amount)
+        assert book_amount > 0
+    except (ValueError, AssertionError):
+        return jsonify({"status": "error", "message": "amount must be an integer"})
+    # Convert import_cost to a float; if it fails, return an error
+    try:
+        import_cost = float(import_cost)
+        assert import_cost > 0
+    except (ValueError, AssertionError):
+        return jsonify({"status": "error", "message": "cost must be a positive float"})
+    # If all conversions are successful, proceed with the query
+    try:
+        query_text = json.dumps({
+            "mode": "import_book",
+            "isbn": book_isbn,
+            "amount": book_amount,
+            "cost": import_cost,
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/modify", methods=["POST"])
+def modify():
+    data = request.json
+    logger.log(logging.INFO, f"On Modify(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    book_isbn = data.get('isbn')
+    original_isbn = data.get('original_isbn')
+    book_title = data.get('title')
+    book_author = data.get('author')
+    book_keywords = data.get('keywords')    # is a list here
+    book_keywords = '|'.join(book_keywords)
+    book_price = data.get('price')          # is a string here
+    on_collision = data.get('on_collision') # ['abort', 'warn', 'ignore']
+    # Assert that all required fields are present
+    if not book_isbn or not book_title or not book_author or not book_price:
+        return jsonify({"status": "error", "message": "Missing required fields"})
+    # Convert the price to a float; if it fails, return an error
+    try:
+        book_price = float(book_price)
+        assert book_price > 0
+    except (ValueError, AssertionError):
+        return jsonify({"status": "error", "message": "Price must be a positive float"})
+    # If all conversions are successful, proceed with the query
+    isbn_occupied = False
+    try:
+        query_text = json.dumps({
+            "mode": "check_isbn",
+            "isbn": book_isbn,
+        })
+        response = runtime.query(query_text)
+        isbn_occupied = json.loads(response)["content"]
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+    if isbn_occupied and on_collision == "abort":
+        return jsonify({"status": "error", "message": "ISBN is already in use"})
+    try:
+        # First select
+        query_text = json.dumps({
+            "mode": "select",
+            "isbn": original_isbn,
+        })
+        response = runtime.query(query_text)
+        logger.log(logging.INFO, f"Select Response: {response}")
+        # Then modify
+        query_text = json.dumps({
+            "mode": "modify",
+            "isbn": book_isbn,
+            "title": book_title,
+            "author": book_author,
+            "keyword": book_keywords,
+            "price": book_price,
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

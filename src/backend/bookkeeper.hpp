@@ -3,6 +3,7 @@
 #include <constants.hpp>
 #include <memory>
 #include <stack>
+#include "json.hpp"
 
 #include "norb_string.hpp"
 #include "norb_blocklist.hpp"
@@ -10,6 +11,8 @@
 using namespace norb::norbs_nook_constants::bookkeeper_constants;
 
 namespace norb {
+    using json = nlohmann::json;
+
     struct Book {
         string<book_isbn_len> isbn{};
         string<book_name_len> name{};
@@ -32,15 +35,42 @@ namespace norb {
 
         Book() = default;
 
-        bool operator < (const Book& other) const;
-        bool operator <= (const Book& other) const;
-        bool operator > (const Book& other) const;
-        bool operator >= (const Book& other) const;
-        bool operator == (const Book& other) const;
+        bool operator <(const Book &other) const;
 
-        friend std::ostream &operator << (std::ostream &os, const Book &book);
+        bool operator <=(const Book &other) const;
 
+        bool operator >(const Book &other) const;
+
+        bool operator >=(const Book &other) const;
+
+        bool operator ==(const Book &other) const;
+
+        friend std::ostream &operator <<(std::ostream &os, const Book &book);
     };
+
+    // The to_json and from_json handles explicit and implicit conversions to and from nlohmann json.
+    inline void to_json(json &j, const Book &b) {
+        j = json{
+            {"isbn", std::string(b.isbn)},
+            {"name", std::string(b.name)},
+            {"author", std::string(b.author)},
+            {"keyword", std::string(b.keyword)},
+            {"quantity", b.quantity},
+            {"price", b.price},
+            {"total_cost", b.total_cost}
+        };
+    }
+
+    inline void from_json(const json &j, Book &b) {
+        b.isbn = j.at("isbn").get<std::string>(); // Use .at() for error handling
+        b.name = j.at("name").get<std::string>();
+        b.author = j.at("author").get<std::string>();
+        b.keyword = j.at("keyword").get<std::string>();
+        b.quantity = j.at("quantity").get<int>();
+        b.price = j.at("price").get<double>();
+        b.total_cost = j.at("total_cost").get<double>();
+    }
+
 
     class BookManager {
     public:
@@ -109,23 +139,23 @@ namespace norb {
 
         inline void DebugPrintBookkeeperInfo() {
             std::cout << "\tbook_list: " << '\n';
-            for (auto i : book_list->asDict()) {
+            for (auto i: book_list->asDict()) {
                 std::cout << i.first << "\t:\t" << i.second << '\n';
             }
             std::cout << "\tisbn_id_list: " << '\n';
-            for (auto i : isbn_id_list->asDict()) {
+            for (auto i: isbn_id_list->asDict()) {
                 std::cout << i.first << "\t:\t" << i.second << '\n';
             }
             std::cout << "\tname_id_list: " << '\n';
-            for (auto i : name_id_list->asDict()) {
+            for (auto i: name_id_list->asDict()) {
                 std::cout << i.first << "\t:\t" << i.second << '\n';
             }
             std::cout << "\tauthor_id_list: " << '\n';
-            for (auto i : author_id_list->asDict()) {
+            for (auto i: author_id_list->asDict()) {
                 std::cout << i.first << "\t:\t" << i.second << '\n';
             }
             std::cout << "\thashed_keyword_id_list: " << '\n';
-            for (auto i : hashed_keyword_id_list->asDict()) {
+            for (auto i: hashed_keyword_id_list->asDict()) {
                 std::cout << i.first << "\t:\t" << i.second << '\n';
             }
         }

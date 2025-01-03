@@ -5,10 +5,10 @@
                 <div class="middle-wrapper">
                     <h1 class="welcome-header a-fade-in">Welcome back,
                         <span class="welcome-header__username-compound">
-                            {{ account_info.content.username }}
+                            {{ account_info.content.username }} \
                             <div style="display: inline-flex; gap:1rem;">
-                                <n-button v-if="account_info.content.privilege == 1" text
-                                    style="font-size: 28px; outline: none; transform: translateY(0.2rem);">
+                                <n-button v-if="account_info.content.privilege == 1" text style="outline: none;"
+                                    :style="{ 'font-size': action_font_size }">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
@@ -18,8 +18,8 @@
                                         Account Settings
                                     </n-tooltip>
                                 </n-button>
-                                <n-button v-if="account_info.content.privilege >= 3" text
-                                    style="font-size: 28px; outline: none; transform: translateY(0.2rem);">
+                                <n-button v-if="account_info.content.privilege >= 3" text style="outline: none;"
+                                    :style="{ 'font-size': action_font_size }">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
@@ -32,19 +32,19 @@
                                         <User />
                                     </n-icon> -->
                                 </n-button>
-                                <n-button v-if="account_info.content.privilege >= 3" text
-                                    style="font-size: 28px; outline: none; transform: translateY(0.2rem);">
+                                <n-button v-if="account_info.content.privilege >= 3" text style="outline: none;"
+                                    :style="{ 'font-size': action_font_size }" @click="handleNewBook">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
                                                 <NotebookReference />
                                             </n-icon>
                                         </template>
-                                        Book Management
+                                        New Book
                                     </n-tooltip>
                                 </n-button>
-                                <n-button v-if="account_info.content.privilege >= 7" text
-                                    style="font-size: 28px; outline: none; transform: translateY(0.2rem);">
+                                <n-button v-if="account_info.content.privilege >= 7" text style="outline: none;"
+                                    :style="{ 'font-size': action_font_size }">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
@@ -54,28 +54,31 @@
                                         Logs
                                     </n-tooltip>
                                 </n-button>
+                                <n-button v-if="account_info.content.privilege >= 7" text style="outline: none;"
+                                    :style="{ 'font-size': action_font_size }">
+                                    <n-tooltip>
+                                        <template #trigger>
+                                            <n-icon>
+                                                <Power />
+                                            </n-icon>
+                                        </template>
+                                        Logout
+                                    </n-tooltip>
+                                </n-button>
                             </div>
                         </span>
                     </h1>
                     <p class="a-fade-in a-delay-2" style="font-size: 1.4rem;letter-spacing: 3pt;">What would you like to
-                        read today?</p>
-                    <div class="search-bar a-fade-in a-delay-3">
-                        <n-input-group>
-                            <n-select size="large" v-model:value="query_mode" :options="available_query_modes"
-                                :style="{ width: '33%' }" />
-                            <n-input size="large" v-if="query_mode == 'all'" placeholder="Show me all" disabled />
-                            <n-input size="large" v-else-if="query_mode != 'keywords'"
-                                placeholder="Search for books..." />
-                            <n-dynamic-tags size="large" v-else placeholder="Search for books..."
-                                class="keywords_input" />
-                        </n-input-group>
-                        <n-button text style="font-size: 24px; outline: none;">
-                            <n-icon>
-                                <SearchOutline />
-                            </n-icon>
-                        </n-button>
-                    </div>
+                        {{account_info.content.privilege <= 1 ? 'read' : 'do'}} today?
+                    </p>
+                    <search-bar class="a-fade-in a-delay-3" @search="handleSearch" />
                 </div>
+                <n-modal v-model:show="showAddBook">
+                    <BookEditCard onIsbnCollide="abort" cardTitle="New Book"
+                        @close="showAddBook = false"
+                        @modify="showAddBook = false; message.success('Book added!')"
+                    />
+                </n-modal>
             </div>
             <div v-else>
                 <p>Loading account information...</p>
@@ -92,19 +95,6 @@
     font-size: 2.5rem;
     margin-bottom: 2rem;
 }
-
-.search-bar {
-    display: flex;
-    justify-content: center;
-    margin-top: 3rem;
-    gap: 1rem;
-}
-
-.keywords_input {
-    width: 66%;
-    padding-left: 1rem;
-    align-items: center;
-}
 </style>
 
 <script lang="ts" setup>
@@ -114,23 +104,24 @@ import axios from 'axios';
 import { useMessage } from 'naive-ui';
 import { reactive } from 'vue';
 import { SearchOutline } from '@vicons/ionicons5';
-import { Edit, User, NotebookReference, Catalog } from '@vicons/carbon';
+import { Edit, User, NotebookReference, Catalog, Power } from '@vicons/carbon';
+
+import SearchBar from '../components/SearchBar.vue';
+import BookEditCard from '../components/BookEditCard.vue';
 
 const message = useMessage();
 const account_info = ref({ username: 'Guest' });
 let cancelTokenSource: any = null;
 
+const action_font_size = '24px';
+
 const route = useRoute();
 const router = useRouter();
 
-const available_query_modes = [
-    { label: 'All', value: 'all' },
-    { label: 'ISBN', value: 'isbn' },
-    { label: 'Title', value: 'title' },
-    { label: 'Author', value: 'author' },
-    { label: 'Keywords', value: 'keywords' }
-]
-const query_mode = ref("all");
+const showAddBook = ref(false);
+const handleNewBook = () => {
+    showAddBook.value = true;
+};
 
 const fetchAccountInfo = async () => {
     try {
@@ -140,6 +131,8 @@ const fetchAccountInfo = async () => {
             cancelToken: cancelTokenSource.token
         });
         account_info.value = response.data;
+        // Save the account info to local storage:
+        localStorage.setItem('account_info', JSON.stringify(response.data));
     } catch (error) {
         if (axios.isCancel(error)) {
             console.log('Request cancelled:', error.message);
@@ -154,5 +147,13 @@ const fetchAccountInfo = async () => {
 watchEffect(() => {
     fetchAccountInfo();
 });
+
+const handleSearch = (search_data: any) => {
+    console.log('Search data:', search_data);
+    // Save the data to local storage:
+    localStorage.setItem('search_data', JSON.stringify(search_data));
+    // Then redirect to the Books page:
+    router.push("books");
+};
 
 </script>

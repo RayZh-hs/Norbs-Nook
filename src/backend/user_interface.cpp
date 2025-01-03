@@ -11,7 +11,6 @@ using json = nlohmann::json;
 using namespace norb::norbs_nook_constants::validation_constants;
 
 namespace norb {
-
     // The Commandline User Interface is the one that the OJ accepts.
     // All the inputs and outputs strictly follow the requirements.
 
@@ -43,103 +42,87 @@ namespace norb {
             try {
                 if (matchRegex(line, regex_exit)) {
                     throw QuitUtilityException();
-                }
-                else if (matchRegex(line, regex_su_without_password)) {
+                } else if (matchRegex(line, regex_su_without_password)) {
                     auto group = groupRegex(line, regex_su_without_password);
                     interface->SwitchUser(group[1]);
-                }
-                else if (matchRegex(line, regex_su_with_password)) {
+                } else if (matchRegex(line, regex_su_with_password)) {
                     auto group = groupRegex(line, regex_su_with_password);
                     interface->SwitchUser(group[1], group[2]);
-                }
-                else if (matchRegex(line, regex_logout)) {
+                } else if (matchRegex(line, regex_logout)) {
                     interface->Logout();
-                }
-                else if (matchRegex(line, regex_register)) {
+                } else if (matchRegex(line, regex_register)) {
                     auto group = groupRegex(line, regex_register);
                     interface->Register(group[1], group[2], group[3]);
-                }
-                else if (matchRegex(line, regex_passwd_without_password)) {
+                } else if (matchRegex(line, regex_passwd_without_password)) {
                     auto group = groupRegex(line, regex_passwd_without_password);
                     interface->Password(group[1], group[2]);
-                }
-                else if (matchRegex(line, regex_passwd_with_password)) {
+                } else if (matchRegex(line, regex_passwd_with_password)) {
                     auto group = groupRegex(line, regex_passwd_with_password);
                     interface->Password(group[1], group[2], group[3]);
-                }
-                else if (matchRegex(line, regex_useradd)) {
+                } else if (matchRegex(line, regex_useradd)) {
                     auto group = groupRegex(line, regex_useradd);
                     interface->UserAdd(group[1], group[2], group[3], group[4]);
-                }
-                else if (matchRegex(line, regex_delete)) {
+                } else if (matchRegex(line, regex_delete)) {
                     auto group = groupRegex(line, regex_delete);
                     interface->Delete(group[1]);
-                }
-                else if (matchRegex(line, regex_show_all)) {
+                } else if (matchRegex(line, regex_show_all)) {
                     auto books = interface->FindAll();
                     if (books.empty()) {
                         std::cout << '\n';
                     } else {
-                        for (auto i : books) {
+                        for (auto i: books) {
                             std::cout << i;
                         }
                     }
-                }
-                else if (matchRegex(line, regex_show_author)) {
+                } else if (matchRegex(line, regex_show_author)) {
                     auto group = groupRegex(line, regex_show_author);
                     auto books = interface->FindByAuthor(group[1]);
                     if (books.empty()) {
                         std::cout << '\n';
                     } else {
-                        for (auto i : books) {
+                        for (auto i: books) {
                             std::cout << i;
                         }
                     }
-                }
-                else if (matchRegex(line, regex_show_name)) {
+                } else if (matchRegex(line, regex_show_name)) {
                     auto group = groupRegex(line, regex_show_name);
                     auto books = interface->FindByName(group[1]);
                     if (books.empty()) {
                         std::cout << '\n';
                     } else {
-                        for (auto i : books) {
+                        for (auto i: books) {
                             std::cout << i;
                         }
                     }
-                }
-                else if (matchRegex(line, regex_show_keyword)) {
+                } else if (matchRegex(line, regex_show_keyword)) {
                     auto group = groupRegex(line, regex_show_keyword);
                     auto books = interface->FindByKeyword(group[1]);
                     if (books.empty()) {
                         std::cout << '\n';
                     } else {
-                        for (auto i : books) {
+                        for (auto i: books) {
                             std::cout << i;
                         }
                     }
-                }
-                else if (matchRegex(line, regex_show_isbn)) {
+                } else if (matchRegex(line, regex_show_isbn)) {
                     auto group = groupRegex(line, regex_show_isbn);
                     auto books = interface->FindByIsbn(group[1]);
                     if (books.empty()) {
                         std::cout << '\n';
                     } else {
-                        for (auto i : books) {
+                        for (auto i: books) {
                             std::cout << i;
                         }
                     }
-                }
-                else if (matchRegex(line, regex_buy)) {
+                } else if (matchRegex(line, regex_buy)) {
                     auto group = groupRegex(line, regex_buy);
                     auto money = interface->Buy(group[1], stringToInteger(group[2]));
                     std::cout << std::fixed << std::setprecision(2) << money << '\n';
-                }
-                else if (matchRegex(line, regex_select)) {
+                } else if (matchRegex(line, regex_select)) {
                     auto group = groupRegex(line, regex_select);
                     interface->Select(group[1]);
-                }
-                else if (matchRegex(line, regex_modify)) {
-                        auto group = groupRegex(line, regex_modify);
+                } else if (matchRegex(line, regex_modify)) {
+                    auto group = groupRegex(line, regex_modify);
                     auto map = extractUniqueKeyValuePairs(group[1]);
                     if (map.empty()) {
                         throw UtilityException("KEY NOT UNIQUE ERROR");
@@ -198,68 +181,68 @@ namespace norb {
                         new_info.price = stringToDouble(map["price"]);
                     }
                     interface->Modify(new_info);
-                }
-                else if (matchRegex(line, regex_import)) {
+                } else if (matchRegex(line, regex_import)) {
                     auto group = groupRegex(line, regex_import);
                     interface->Import(stringToInteger(group[1]), stringToDouble(group[2]));
-                }
-                else if (matchRegex(line, regex_show_finance_all)) {
+                } else if (matchRegex(line, regex_show_finance_all)) {
                     auto finance = interface->GetFinance();
-                    std::cout << std::fixed << std::setprecision(2) << "+ " << finance.first << " - " << std::abs(finance.second) << '\n';
-                }
-                else if (matchRegex(line, regex_show_finance_selective)) {
+                    std::cout << std::fixed << std::setprecision(2) << "+ " << finance.first << " - " << std::abs(
+                        finance.second) << '\n';
+                } else if (matchRegex(line, regex_show_finance_selective)) {
                     auto group = groupRegex(line, regex_show_finance_selective);
                     const int count = stringToInteger(group[1]);
                     if (count == 0) {
                         std::cout << '\n';
-                    }
-                    else {
+                    } else {
                         auto finance = interface->GetFinance(count);
-                        std::cout << std::fixed << std::setprecision(2) << "+ " << finance.first << " - " << std::abs(finance.second) << '\n';
+                        std::cout << std::fixed << std::setprecision(2) << "+ " << finance.first << " - " << std::abs(
+                            finance.second) << '\n';
                     }
-                }
-                else if (matchRegex(line, regex_report_finance)) {
+                } else if (matchRegex(line, regex_report_finance)) {
                     // TODO: report finance
                     auto finance_info = interface->ReportFinance();
                     double net_revenue = 0;
                     std::cout << std::fixed << std::setprecision(2);
                     for (int i = 0; i < finance_info.size(); i++) {
                         auto fin = finance_info[i];
-                        std::cout << i + 1 << "#:\t " << (fin > 0 ? con::boldGreen : con::boldRed) << (fin > 0 ? "+" : "-") << std::abs(fin) << con::clear;
+                        std::cout << i + 1 << "#:\t " << (fin > 0 ? con::boldGreen : con::boldRed) << (
+                            fin > 0 ? "+" : "-") << std::abs(fin) << con::clear;
                         std::cout << '\t' << "Tot = ";
                         net_revenue += fin;
                         if (fin >= 0) {
                             std::cout << con::underlineGreen << '+' << net_revenue << con::clear << '\n';
-                        }
-                        else {
+                        } else {
                             std::cout << con::underlineRed << net_revenue << con::clear << '\n';
                         }
                     }
                     std::cout << con::boldYellow << "- Total Revenue: " << net_revenue << con::clear << '\n';
-                }
-                else if (matchRegex(line, regex_report_employee)) {
+                } else if (matchRegex(line, regex_report_employee)) {
                     // TODO: report finance
                     auto actions = interface->ReportEmployee();
-                    for (auto i : actions) {
+                    for (auto i: actions) {
                         std::cout << i;
                     }
-                }
-                else if (matchRegex(line, regex_log)) {
+                } else if (matchRegex(line, regex_log)) {
                     // TODO: log
                     std::cout << con::clear;
-                    for (const auto& i : interface->GetLog()) {
+                    for (const auto &i: interface->GetLog()) {
                         auto type = Logger::WhichLevel(i);
                         switch (type) {
                             case Logger::level::DEBUG:
-                                std::cout << con::colorCyan;    break;
+                                std::cout << con::colorCyan;
+                                break;
                             case Logger::level::INFO:
-                                std::cout << con::colorGreen;   break;
+                                std::cout << con::colorGreen;
+                                break;
                             case Logger::level::WARNING:
-                                std::cout << con::colorYellow;  break;
+                                std::cout << con::colorYellow;
+                                break;
                             case Logger::level::ERROR:
-                                std::cout << con::colorRed;     break;
+                                std::cout << con::colorRed;
+                                break;
                             default:
-                                std::cout << con::clear;        break;
+                                std::cout << con::clear;
+                                break;
                         }
                         std::cout << i;
                         std::cout << con::clear << '\n';
@@ -281,8 +264,7 @@ namespace norb {
                 else {
                     throw UtilityException("UNKNOWN LINE ERROR");
                 }
-             }
-            catch (QuitUtilityException &) {
+            } catch (QuitUtilityException &) {
                 break;
             }
             catch (UtilityException &exception) {
@@ -310,7 +292,26 @@ namespace norb {
 
     void GraphicalUserInterface::Run() {
         freopen("./generated/logs/cerr-capture.log", "w", stderr);
-        while(true) {
+        // Append some demo books
+        interface->SwitchUser("root", "sjtu");
+        interface->Select("000");
+        interface->Modify({
+            "978-0553808049", "A Song of Ice and Fire", "George R. R. Martin", "fantasy|American", 5, 24.26
+        });
+        interface->Select("000");
+        interface->Modify({
+            "978-0441172719", "Dune", "Frank Herbert", "sci-fi|fantasy|demo", 10, 12.5
+        });
+        interface->Select("000");
+        interface->Modify({
+            "000-00000", "A Guide to Redstone", "Norb", "demo|minecraft|gaming", 100, 0.01
+        });
+        interface->Select("000");
+        interface->Modify({
+            "000-00001", "How to build a redstone computer", "Matbattwings", "demo|minecraft|gaming"
+        });
+        interface->Logout();
+        while (true) {
             try {
                 json input;
                 std::cin >> input;
@@ -326,16 +327,14 @@ namespace norb {
                             {"message", "successfully logged in"}
                         }) << '\n';
                         std::cerr << "[INFO] Login Successful" << '\n';
-                    }
-                    catch (UtilityException &) {
+                    } catch (UtilityException &) {
                         std::cout << json::object({
                             {"status", "failure"},
                             {"message", "wrong userid-password combination"}
                         }) << '\n';
                         std::cerr << "[WARNING] Login Failed" << '\n';
                     }
-                }
-                else if (mode == "register") {
+                } else if (mode == "register") {
                     try {
                         interface->Register(input["userid"], input["password"], input["username"]);
                         std::cout << json::object({
@@ -343,30 +342,122 @@ namespace norb {
                             {"message", "successful registration"}
                         }) << '\n';
                         std::cerr << "[INFO] Registration Successful" << '\n';
-                    }
-                    catch (UtilityException &) {
+                    } catch (UtilityException &) {
                         std::cout << json::object({
                             {"status", "failure"},
                             {"message", "please select another user-id"}
                         }) << '\n';
                         std::cerr << "[WARNING] Registration Failed" << '\n';
                     }
-                }
-                else if (mode == "active_account_info") {
+                } else if (mode == "active_account_info") {
                     Account account = interface->GetActiveAccount();
                     std::cout << json::object({
                         {"status", "success"},
-                        {"content", {
-                            {"userid", std::string(account.userid)},
-                            {"username", std::string(account.username)},
-                            {"hashed_password", account.hashed_password},
-                            {"privilege", account.privilege}
-                        }}
+                        {
+                            "content", {
+                                {"userid", std::string(account.userid)},
+                                {"username", std::string(account.username)},
+                                {"hashed_password", account.hashed_password},
+                                {"privilege", account.privilege}
+                            }
+                        }
                     }) << '\n';
                     std::cerr << "[INFO] GetActiveAccountInfo Successful" << '\n';
+                } else if (mode == "find_books") {
+                    std::vector<Book> books;
+                    auto query_type = input["query_type"];
+                    if (query_type == "all")
+                        books = interface->FindAll();
+                    else if (query_type == "isbn")
+                        books = interface->FindByIsbn(input["content"]);
+                    else if (query_type == "author")
+                        books = interface->FindByAuthor(input["content"]);
+                    else if (query_type == "title")
+                        books = interface->FindByName(input["content"]);
+                    else if (query_type == "keywords")
+                        books = interface->FindByKeyword(input["content"]);
+                    else {
+                        std::cerr << "Unknown query type: " << query_type << "!\n";
+                        std::cout << json::object({
+                            {"status", "error"},
+                            {"content", nullptr},
+                            {"message", "Unidentified query type" + std::string(query_type)}
+                        }) << '\n';
+                        continue;
+                    }
+                    std::cout << json::object({
+                        {"status", "success"},
+                        {"content", books}
+                    }) << '\n';
+                    std::cerr << "[INFO] FindBooksAll Successful" << '\n';
+                } else if (mode == "buy_book") {
+                    auto isbn = input["isbn"];
+                    auto amount = input["amount"];
+                    try {
+                        interface->Buy(isbn, amount);
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"message", "Transaction successful!"}
+                        }) << '\n';
+                        std::cerr << "[INFO] BuyBook Successful" << '\n';
+                    } catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "Failed to buy book."}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                } else if (mode == "import_book") {
+                    try {
+                        interface->Select(input["isbn"]);
+                        interface->Import(input["amount"], input["cost"]);
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"message", "Import Successful"}
+                        }) << '\n';
+                        std::cerr << "[INFO] Import Successful" << '\n';
+                    } catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "Import Failed!"}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                } else if (mode == "check_isbn") {
+                    bool exists = interface->IsbnIsOccupied(input["isbn"]);
+                    std::cout << json::object({
+                        {"status", "success"},
+                        {"content", exists}
+                    }) << '\n';
+                    std::cerr << "[INFO] The queried ISBN has occupied status: " << exists << '\n';
+                } else if (mode == "select") {
+                    interface->Select(input["isbn"]);
+                    std::cout << json::object({
+                        {"status", "success"},
+                    }) << '\n';
+                    std::cerr << "[INFO] Selected book: " << input["isbn"] << '\n';
+                } else if (mode == "modify") {
+                    try {
+                        Book current_book = interface->GetSelectedBook();
+                        current_book.isbn = input["isbn"];
+                        current_book.author = input["author"];
+                        current_book.keyword = input["keyword"];
+                        current_book.name = input["title"];
+                        current_book.price = input["price"];
+                        interface->Modify(current_book);
+                        std::cout << json::object({
+                            {"status", "success"},
+                        }) << '\n';
+                        std::cerr << "Modify Succeeded" << '\n';
+                    } catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "Modify Failed!"}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
                 }
-            }
-            catch (QuitUtilityException &) {
+            } catch (QuitUtilityException &) {
                 return;
             }
             catch (...) {
@@ -374,6 +465,4 @@ namespace norb {
             }
         }
     }
-
-
 }
