@@ -7,7 +7,7 @@ import Books from './views/Books.vue'
 
 const routes = [
     {path: '/', component: WelcomeView},
-    {path: '/signin', component: SigninRegister},
+    {path: '/login-register', component: SigninRegister},
     {path: '/dashboard', component: Dashboard},
     {path: '/books', component: Books}
 ]

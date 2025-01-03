@@ -25,22 +25,22 @@
             <div class="register__box">
                 <h1 class="signin__title a-fade-in">Register</h1>
                 <n-form :model="registerForm" :rules="register_rules" ref="registerFormRef">
-                    <n-form-item label="User ID" path="userid" size="large">
+                    <n-form-item label="User ID" path="userid" size="large" class="a-fade-in a-delay-2">
                         <n-input v-model:value="registerForm.userid" placeholder="Enter your user-id" />
                     </n-form-item>
-                    <n-form-item label="Password" path="password" size="large">
+                    <n-form-item label="Password" path="password" size="large" class="a-fade-in a-delay-3">
                         <n-input v-model:value="registerForm.password" type="password"
                             placeholder="Enter your password" />
                     </n-form-item>
-                    <n-form-item label="Username" path="username" size="large">
+                    <n-form-item label="Username" path="username" size="large" class="a-fade-in a-delay-4">
                         <n-input v-model:value="registerForm.username" placeholder="Enter your username" />
                     </n-form-item>
-                    <n-form-item>
+                    <n-form-item class="a-fade-in a-delay-5">
                         <n-button type="primary" @click="handleSubmitRegister" class="full-width-button">Sign
                             Up</n-button>
                     </n-form-item>
                 </n-form>
-                <a class="link-away link-away--to-signin" @click="register = false">Have an account? Sign in here.</a>
+                <a class="link-away link-away--to-signin a-fade-in a-delay-7" @click="register = false">Have an account? Sign in here.</a>
             </div>
         </div>
     </div>
@@ -51,6 +51,9 @@ import { ref, reactive } from 'vue'
 import { useMessage, type FormInst } from 'naive-ui'
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { watchEffect } from 'vue';
+import { onActivated } from 'vue';
+import { onMounted } from 'vue';
 
 const router = useRouter();
 const message = useMessage();
@@ -123,16 +126,6 @@ const handleSubmitSignin = async () => {
     }
 };
 
-//// Simulate API call.
-// const simulateSignin = async (userData: any) => {
-//     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network latency
-//     if (userData.userid === 'root' && userData.password === 'sjtu') {
-//         return { success: true, message: '' };
-//     } else {
-//         return { success: false, message: 'Invalid username or password' };
-//     }
-// };
-
 const handleSubmitRegister = async () => {
     try {
         const isValid = await registerFormRef.value?.validate();
@@ -151,15 +144,14 @@ const handleSubmitRegister = async () => {
     }
 };
 
-// Simulate API call.
-const simulateRegister = async (userData: any) => {
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network latency
-    if (userData.username === 'root' && userData.password === 'sjtu') {
-        return { success: true, message: '' };
-    } else {
-        return { success: false, message: 'Invalid username or password' };
+onMounted(() => {
+    console.log('SigninRegister activated');
+    // Get register/signin mode from local storage (if any exist)
+    const registerMode = localStorage.getItem('isAtRegister');
+    if (registerMode) {
+        register.value = JSON.parse(registerMode);
     }
-};
+});
 
 </script>
 

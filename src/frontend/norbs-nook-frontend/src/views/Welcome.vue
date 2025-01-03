@@ -13,11 +13,15 @@ const renderIcon = () => {
 }
 
 const gotoLogin = () => {
-  router.push('/signin') // Use the router instance
+  router.push('/login-register') // Use the router instance
 }
 
 const gotoRepo = () => {
   window.open('https://github.com/RayZh-hs/Norbs-Nook')
+}
+
+const setRegister = (value: boolean) => {
+  localStorage.setItem('isAtRegister', value.toString())
 }
 </script>
 
@@ -27,14 +31,16 @@ const gotoRepo = () => {
         <p class="welcome__slogan a-fade-in a-delay-5">A place where you can read and wonder</p>
         <n-flex justify="space-around">
             <n-button ghost size="large" class="custom-btn custom-btn--long-btn a-fade-in a-delay-10"
-                @click="gotoLogin"
+                @click="gotoLogin(); setRegister(false);"
             >Login</n-button>
             <n-button ghost size="large" class="custom-btn custom-btn--long-btn a-fade-in a-delay-10"
                 :render-icon="renderIcon" @click="gotoRepo">View
                 Source</n-button>
         </n-flex>
         <n-flex justify="center" class="a-fade-in a-delay-12">
-            <n-button text size="large" class="sign-up-btn">New here? Click to sign up!</n-button>
+            <n-button text size="large" class="sign-up-btn"
+            @click="gotoLogin(); setRegister(true);"
+            >New here? Click to sign up!</n-button>
         </n-flex>
     </div>
 </template>
