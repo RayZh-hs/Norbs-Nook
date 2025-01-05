@@ -48,10 +48,10 @@
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
-                                                <Catalog />
+                                                <ChartHistogram />
                                             </n-icon>
                                         </template>
-                                        Logs
+                                        History
                                     </n-tooltip>
                                 </n-button>
                                 <n-button v-if="account_info.content.privilege >= 1" text style="outline: none;"
@@ -104,7 +104,7 @@ import axios from 'axios';
 import { useMessage } from 'naive-ui';
 import { reactive } from 'vue';
 import { SearchOutline } from '@vicons/ionicons5';
-import { Edit, User, NotebookReference, Catalog, Power } from '@vicons/carbon';
+import { Edit, User, NotebookReference, Catalog, Power, ChartHistogram } from '@vicons/carbon';
 
 import SearchBar from '../components/SearchBar.vue';
 import BookEditCard from '../components/BookEditCard.vue';
