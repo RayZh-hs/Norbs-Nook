@@ -489,6 +489,40 @@ namespace norb {
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
                 }
+                else if (mode == "get_worker_report") {
+                    try {
+                        const auto report = interface->ReportEmployee();
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"content", report}
+                        }) << '\n';
+                        std::cerr << "[INFO] GetWorkerReport successful" << '\n';
+                    }
+                    catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "You are not authorized to perform the query!"}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                }
+                else if (mode == "get_logs") {
+                    try {
+                        const auto report = interface->GetLog();
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"content", report}
+                        }) << '\n';
+                        std::cerr << "[INFO] GetWorkerReport successful" << '\n';
+                    }
+                    catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "You are not authorized to perform the query!"}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                }
             } catch (QuitUtilityException &) {
                 return;
             }

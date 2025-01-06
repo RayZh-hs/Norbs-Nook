@@ -16,10 +16,27 @@ import {
 } from 'chart.js';
 import { Bar } from 'vue-chartjs';
 import axios from 'axios';
+import { Debug, Information, WarningAlt, ErrorOutline } from '@vicons/carbon';
+
+// Transaction Related Data
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
-const activeTab = ref('transactions');
+// const activeTab = ref('transactions');
+const tabActive = ref({
+    transactions: true,
+    workerReport: false,
+    logs: false
+})
+const setActiveTab = (tab: string) => {
+    Object.keys(tabActive.value).forEach(key => {
+        tabActive.value[key] = false;
+    });
+    // Add a delay of 0.52s to ensure the transition is complete
+    setTimeout(() => {
+        tabActive.value[tab] = true;
+    }, 530);
+}
 
 const message = useMessage();
 
@@ -44,7 +61,7 @@ const chartExtract = ref({
     revenue: 0
 })
 
-const fetchData = async () => {
+const fetchTransactionsData = async () => {
     /** This demo can be used as a reference for the data structure:
      * {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -74,7 +91,7 @@ const fetchData = async () => {
     console.log(response.data);
     if (response.data.status == 'success') {
         const processedData = {
-            labels: response.data.content.map((_: any, i: any) => `Transaction-${i}`),
+            labels: response.data.content.map((_: any, i: any) => `Transaction-${i + 1}`),
             datasets: [
                 {
                     type: 'bar',
@@ -112,12 +129,60 @@ const fetchData = async () => {
     }
 }
 
+// Worker Report Related Data
+const workerReportData = ref<any>(null);
+const fetchWorkerReport = async () => {
+    const response = await axios.post("http://localhost:5000/api/get_worker_report");
+    console.log(response.data);
+    if (response.data.status == 'success') {
+        workerReportData.value = response.data.content;
+    } else {
+        message.error(response.data.message);
+    }
+}
+
+// Logs Related Data
+const logsData = ref<any>(null);
+const fetchLogs = async () => {
+    const response = await axios.post("http://localhost:5000/api/get_logs");
+    console.log(response.data);
+    if (response.data.status == 'success') {
+        // Turn each entry from a string to an object
+        const processedData = response.data.content.map((item: string) => {
+            let type = item.split(' ')[0];
+            type = type.slice(1, type.length - 1);
+            const content = item.slice(type.length + 2);
+            return {
+                mode: type,
+                content: content
+            }
+        });
+        console.log('processedData:', processedData);
+        logsData.value = processedData;
+    } else {
+        message.error(response.data.message);
+    }
+}
+const logColors = {
+    DEBUG: '#7fe7c4',
+    INFO: '#70c0e8',
+    WARNING: '#f9d71c',
+    ERROR: '#f97e7e'
+}
+const levelGreaterThan = (current: string, target: string) => {
+    const levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR'];
+    return levels.indexOf(current) >= levels.indexOf(target);
+}
+const logModeRef = ref('INFO');
+
 onMounted(async () => {
-    chartData.value = await fetchData();;
+    chartData.value = await fetchTransactionsData();;
     // @ts-ignore  < false alarm by vscode >
     if (chartRef.value) {
         chartRef.value.renderChart(chartData.value, chartOptions.value);
     }
+    fetchWorkerReport();
+    fetchLogs();
 });
 </script>
 
@@ -127,8 +192,8 @@ onMounted(async () => {
             <div class="tabs">
                 <n-tooltip trigger="hover">
                     <template #trigger>
-                        <n-button text class="tabs__btn tabs__btn--transactions" @click="activeTab = 'transactions'"
-                            :class="{ 'tabs_btn--active': activeTab === 'transactions' }">
+                        <n-button text class="tabs__btn tabs__btn--transactions" @click="setActiveTab('transactions')"
+                            :class="{ 'tabs_btn--active': tabActive.transactions }">
                             <n-icon>
                                 <ChartLine />
                             </n-icon>
@@ -138,8 +203,8 @@ onMounted(async () => {
                 </n-tooltip>
                 <n-tooltip trigger="hover">
                     <template #trigger>
-                        <n-button text class="tabs__btn tabs__btn--worker-report" @click="activeTab = 'worker-report'"
-                            :class="{ 'tabs_btn--active': activeTab === 'worker-report' }">
+                        <n-button text class="tabs__btn tabs__btn--worker-report" @click="setActiveTab('workerReport')"
+                            :class="{ 'tabs_btn--active': tabActive.workerReport }">
                             <n-icon>
                                 <UserData />
                             </n-icon>
@@ -149,8 +214,8 @@ onMounted(async () => {
                 </n-tooltip>
                 <n-tooltip trigger="hover">
                     <template #trigger>
-                        <n-button text class="tabs__btn tabs__btn--logs" @click="activeTab = 'logs'"
-                            :class="{ 'tabs_btn--active': activeTab === 'logs' }">
+                        <n-button text class="tabs__btn tabs__btn--logs" @click="setActiveTab('logs')"
+                            :class="{ 'tabs_btn--active': tabActive.logs }">
                             <n-icon>
                                 <Data2 />
                             </n-icon>
@@ -162,7 +227,7 @@ onMounted(async () => {
             <n-divider />
             <div class="main-body a-fade-in a-delay-2">
                 <Transition>
-                    <div class="transactions-body" v-if="activeTab === 'transactions'">
+                    <div class="transition-body transactions-body" v-if="tabActive.transactions">
                         <!-- <canvas id="transactionChart"></canvas> -->
                         <!-- <ChartComponent :chart-data="chartData" :chart-options="chartOptions" /> -->
                         <div class="transaction-wrapper" v-if="chartResponded && chartData">
@@ -172,13 +237,103 @@ onMounted(async () => {
                             <div class="bar-wrapper">
                                 <Bar :data="chartData" :options="chartOptions" />
                             </div>
-                            <p>{{ chartExtract?.purchases }} purchases, {{ chartExtract?.imports }} imports are recorded in this season.</p>
-                            <p>Total revenue generated: <span>${{ chartExtract?.revenue }}</span></p>
+                            <p class="chart-info__basic">{{ chartExtract?.purchases }} purchases, {{
+                                chartExtract?.imports }}
+                                imports are recorded
+                                in this
+                                season.</p>
+                            <p class="chart-info__basic">Total revenue generated: <span
+                                    class="chart-info__highlight">${{
+                                        chartExtract?.revenue }}</span></p>
                         </div>
                         <!-- <div v-else-if="chartResponded">
                             <p>You are not allowed to view this page.</p>
                             <p>Please login first.</p>
                         </div> -->
+                        <div v-else>
+                            <n-space vertical>
+                                <n-skeleton height="1.3rem" width="33%" />
+                                <n-skeleton height="1.3rem" width="66%" :sharp="false" />
+                                <n-skeleton height="1.3rem" round />
+                                <n-skeleton height="1.3rem" circle />
+                            </n-space>
+                        </div>
+                    </div>
+                </Transition>
+                <Transition>
+                    <div class="transition-body worker-report-body" v-if="tabActive.workerReport">
+                        <div v-if="workerReportData">
+                            <h1 class="history-income-tot">
+                                Worker Report
+                            </h1>
+                            <n-scrollbar style="max-height: 50vh; min-width: 50vw;" trigger="none">
+                                <div v-for="(worker, i) in workerReportData" :key="i" class="worker-report-wrapper">
+                                    <n-flex gap="1rem" align="center">
+                                        <n-avatar round>{{ worker.user_id[0].toUpperCase() }}</n-avatar>
+                                        <div class="message-text">
+                                            <h3 class="message-text__user-id">{{ worker.user_id }}</h3>
+                                            <p class="message-text__description">{{ worker.description }}</p>
+                                        </div>
+                                    </n-flex>
+                                </div>
+                            </n-scrollbar>
+                        </div>
+                        <div v-else>
+                            <n-space vertical>
+                                <n-skeleton height="1.3rem" width="33%" />
+                                <n-skeleton height="1.3rem" width="66%" :sharp="false" />
+                                <n-skeleton height="1.3rem" round />
+                                <n-skeleton height="1.3rem" circle />
+                            </n-space>
+                        </div>
+                    </div>
+                </Transition>
+                <Transition>
+                    <div class="transition-body logs-body" v-if="tabActive.logs">
+                        <div v-if="logsData">
+                            <h1 class="history-income-tot">
+                                Logs
+                            </h1>
+                            <n-space vertical size="large">
+                                <n-radio-group size="small" v-model:value="logModeRef">
+                                    <n-radio-button value="DEBUG">Debug</n-radio-button>
+                                    <n-radio-button value="INFO">Info</n-radio-button>
+                                    <n-radio-button value="WARNING">Warning</n-radio-button>
+                                    <n-radio-button value="ERROR">Error</n-radio-button>
+                                </n-radio-group>
+                                <n-scrollbar style="max-height: 40vh; min-width: 50vw;" trigger="none">
+                                    <TransitionGroup>
+                                        <div v-for="(log, i) in logsData.filter((item: any) => levelGreaterThan(item.mode, logModeRef))"
+                                            :key="i" class="log-report-wrapper">
+                                            <n-flex gap="1rem" align="center">
+                                                <n-avatar round
+                                                    :style="{ 'background-color': logColors[log.mode], color: '#1c1b1b' }">
+                                                    <n-icon v-if="log.mode === 'DEBUG'" size="large">
+                                                        <Debug />
+                                                    </n-icon>
+                                                    <n-icon v-else-if="log.mode === 'INFO'" size="large">
+                                                        <Information />
+                                                    </n-icon>
+                                                    <n-icon v-else-if="log.mode === 'WARNING'" size="large">
+                                                        <WarningAlt />
+                                                    </n-icon>
+                                                    <n-icon v-else-if="log.mode === 'ERROR'" size="large">
+                                                        <ErrorOutline />
+                                                    </n-icon>
+                                                </n-avatar>
+                                                <div class="message-text">
+                                                    <h3 class="message-text__log-id"
+                                                        :style="{ 'color': logColors[log.mode] }">
+                                                        {{ log.mode
+                                                        }}</h3>
+                                                    <p class="message-text__description">{{ log.content }}</p>
+                                                </div>
+                                            </n-flex>
+                                        </div>
+                                    </TransitionGroup>
+                                </n-scrollbar>
+                            </n-space>
+                        </div>
                         <div v-else>
                             <n-space vertical>
                                 <n-skeleton height="1.3rem" width="33%" />
@@ -198,6 +353,16 @@ onMounted(async () => {
 .history-container {
     /* to adjust for the footnote */
     transform: translateY(-1.2rem);
+}
+
+.main-body {
+    position: relative;
+}
+
+.transition-body {
+    /* position: absolute; */
+    top: 0;
+    left: 0;
 }
 
 /* Tabs */
@@ -229,9 +394,13 @@ onMounted(async () => {
     transition: all 0.5s ease;
 }
 
-.v-enter-from,
+.v-enter-from {
+    transform: translateX(0.5em);
+    opacity: 0;
+}
+
 .v-leave-to {
-    transform: translateX(0.5rem);
+    transform: translateX(-0.5rem);
     opacity: 0;
 }
 
@@ -248,16 +417,50 @@ onMounted(async () => {
     /* max-width: 60vw; */
 }
 
-p {
+.chart-info__basic {
     font-weight: 200;
     color: rgb(161, 159, 159);
 }
 
-span {
+.chart-info__highlight {
     display: inline-flexbox;
     font-weight: 400;
     font-size: 1rem;
     color: #97e1c4;
     align-self: center;
 }
+
+/* Worker Report */
+
+.worker-report-wrapper,
+.log-report-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.message-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* gap: 0.2rem; */
+}
+
+.message-text__log-id,
+.message-text__user-id {
+    font-size: 1.2rem;
+    font-weight: 200;
+    color: #7fe7c4;
+    margin: 0;
+}
+
+.message-text__description {
+    font-size: 0.8rem;
+    font-weight: 200;
+    color: rgb(161, 159, 159);
+    margin: 0;
+}
+
+/* Logs */
 </style>

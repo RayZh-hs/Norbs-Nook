@@ -258,6 +258,38 @@ def get_transactions():
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
+@app.route("/api/get_worker_report", methods=["POST"])
+def get_worker_report():
+    logger.log(logging.INFO, f"On GetWorkerReport()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "get_worker_report",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/get_logs", methods=["POST"])
+def get_logs():
+    logger.log(logging.INFO, f"On GetLogs()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "get_logs",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
