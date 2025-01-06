@@ -30,6 +30,8 @@ I genuinely thank the authors for making these amazing projects available for us
   - [**Naive UI**](https://github.com/tusen-ai/naive-ui): A Vue 3 Component Library. Fairly Complete. Theme Customizable. Uses TypeScript. Fast.
   - [**Vite**](https://github.com/vitejs/vite): Next generation frontend tooling. It's fast!
   - [**Router**](https://github.com/vuejs/router): The official router for Vue.js
+  - [**Chart.js**](https://www.chartjs.org/): Simple yet flexible JavaScript charting library for the modern web.
+  - [**vue-chartjs**](https://vue-chartjs.org/): ⚡ Easy and beautiful charts with Chart.js and Vue.js.
 
 ---
 
