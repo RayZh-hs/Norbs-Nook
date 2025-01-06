@@ -44,7 +44,7 @@
                                     </n-tooltip>
                                 </n-button>
                                 <n-button v-if="account_info.content.privilege >= 7" text style="outline: none;"
-                                    :style="{ 'font-size': action_font_size }">
+                                    :style="{ 'font-size': action_font_size }" @click="router.push('history')">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>

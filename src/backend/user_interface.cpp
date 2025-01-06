@@ -304,12 +304,18 @@ namespace norb {
         });
         interface->Select("000");
         interface->Modify({
-            "000-00000", "A Guide to Redstone", "Norb", "demo|minecraft|gaming", 100, 0.01
+            "000-00000", "A Guide to Redstone", "Norb", "demo|minecraft|gaming", 100, 15.3
         });
         interface->Select("000");
         interface->Modify({
-            "000-00001", "How to build a redstone computer", "Matbattwings", "demo|minecraft|gaming"
+            "000-00001", "How to build a redstone computer", "Matbattwings", "demo|minecraft|gaming", 1, 21.6
         });
+        // Add some demo purchases and imports
+        interface->Buy("978-0553808049", 2);
+        interface->Buy("000-00000", 7);
+        interface->Select("000-00001");
+        interface->Import(10, 21.36);
+        interface->Buy("000-00001", 1);
         interface->Logout();
         while (true) {
             try {
@@ -465,6 +471,23 @@ namespace norb {
                         {"more_users", moreUsers}
                     }) << '\n';
                     std::cerr << "[INFO] Logout Successful" << '\n';
+                }
+                else if (mode == "get_transactions") {
+                    try {
+                        const auto transactions = interface->ReportFinance();
+                        std::cout << json::object({
+                            {"status", "success"},
+                            {"content", transactions}
+                        }) << '\n';
+                        std::cerr << "[INFO] GetTransaction successful" << '\n';
+                    }
+                    catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "You are not authorized to perform the query!"}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
                 }
             } catch (QuitUtilityException &) {
                 return;

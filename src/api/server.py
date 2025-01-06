@@ -242,6 +242,23 @@ def logout():
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
+@app.route("/api/get_transactions", methods=["POST"])
+def get_transactions():
+    logger.log(logging.INFO, f"On GetTransactions()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "get_transactions",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     runtime.start()
