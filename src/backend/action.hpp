@@ -28,13 +28,13 @@ namespace norb {
     // The to_json and from_json handles explicit and implicit conversions to and from nlohmann json.
     inline void to_json(json &j, const Action &b) {
         j = json{
-                {"user_id", std::string(b.user_id)},
+                {"userid", std::string(b.user_id)},
                 {"description", std::string(b.description)},
         };
     }
 
     inline void from_json(const json &j, Action &b) {
-        b.user_id = j.at("user_id").get<std::string>(); // Use .at() for error handling
+        b.user_id = j.at("userid").get<std::string>(); // Use .at() for error handling
         b.description = j.at("description").get<std::string>();
     }
 

@@ -523,6 +523,68 @@ namespace norb {
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
                 }
+                else if (mode == "get_all_accounts") {
+                    const auto report = interface->GetAllAccounts();
+                    std::cout << json::object({
+                        {"status", "success"},
+                        {"content", report}
+                    }) << '\n';
+                    std::cerr << "[INFO] GetWorkerReport successful" << '\n';
+                }
+                else if (mode == "get_login_stack") {
+                    const auto report = interface->GetLoginStack();
+                    std::cout << json::object({
+                        {"status", "success"},
+                        {"content", report}
+                    }) << '\n';
+                    std::cerr << "[INFO] GetWorkerReport successful" << '\n';
+                }
+                else if (mode == "password") {
+                    try {
+                        if (input["old_password"].empty()) {
+                            interface->Password(input["userid"], input["new_password"]);
+                        } else {
+                            interface->Password(input["userid"], input["old_password"],input["new_password"]);
+                        }
+                        std::cout << json::object({
+                            {"status", "success"},
+                        }) << '\n';
+                        std::cerr << "[INFO] Password successful" << '\n';
+                    }
+                    catch (UtilityException &e) {
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", "Wrong old password!"}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                }
+                else if (mode == "add_user") {
+                    try {
+                        interface->UserAdd(input["userid"], input["password"], input["privilege"], input["username"]);
+                        std::cout << json::object({
+                            {"status", "success"}
+                        }) << '\n';
+                        std::cerr << "[INFO] AddUser successful" << '\n';
+                    }
+                    catch (UtilityException &e) {
+                        std::string message{};
+                        if (std::string(e.what()) == "UNDERPRIVILEGED ERROR") {
+                            message = "You are not authorized to create this user!";
+                        }
+                        else if (std::string(e.what()) == "USER-ID COLLISION FAILURE") {
+                            message = "There is already a user with this user-id!";
+                        }
+                        else {
+                            message = "Internal Utility Exception occurred";
+                        }
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", message}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                }
             } catch (QuitUtilityException &) {
                 return;
             }

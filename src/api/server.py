@@ -20,10 +20,10 @@ def index():
 def login():
     data = request.json
     logger.log(logging.INFO, f"On Login(): Received data: {data}")
-    user_id = data.get('user_id')
+    userid = data.get('userid')
     password = data.get('password')
     
-    if not user_id or not password:
+    if not userid or not password:
         raise ValueError("Missing UID or Password")
     if runtime.process is None:
         raise RuntimeError("Runtime is not running.")
@@ -31,7 +31,7 @@ def login():
     try:
         query_text = json.dumps({
             "mode": "login",
-            "userid": user_id,
+            "userid": userid,
             "password": password,
         })
         response = runtime.query(query_text)
@@ -44,11 +44,11 @@ def login():
 def register():
     data = request.json
     logger.log(logging.INFO, f"On Register(): Received data: {data}")
-    user_id = data.get('user_id')
+    userid = data.get('userid')
     password = data.get('password')
     username = data.get('username')
     
-    if not user_id or not password:
+    if not userid or not password:
         raise ValueError("Missing UID, Username or Password")
     if runtime.process is None:
         raise RuntimeError("Runtime is not running.")
@@ -56,7 +56,7 @@ def register():
     try:
         query_text = json.dumps({
             "mode": "register",
-            "userid": user_id,
+            "userid": userid,
             "password": password,
             "username": username,
         })
@@ -290,6 +290,83 @@ def get_logs():
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
+@app.route("/api/get_all_accounts", methods=["POST"])
+def get_all_accounts():
+    logger.log(logging.INFO, f"On GetAllAccounts()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "get_all_accounts",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/get_login_stack", methods=["POST"])
+def get_login_stack():
+    logger.log(logging.INFO, f"On GetLoginStack()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    
+    try:
+        query_text = json.dumps({
+            "mode": "get_login_stack",
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/password", methods=["POST"])
+def password():
+    data = request.json
+    logger.log(logging.INFO, f"On Password(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    userid = data.get('userid')
+    old_password = data.get('old_password')
+    new_password = data.get('new_password')
+    try:
+        query_text = json.dumps({
+            "mode": "password",
+            "userid": userid,
+            "old_password": old_password,
+            "new_password": new_password,
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/add_user", methods=["POST"])
+def add_user():
+    data = request.json
+    logger.log(logging.INFO, f"On AddUser(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    userid = data.get('userid')
+    password = data.get('password')
+    username = data.get('username')
+    privilege = data.get('privilege')
+    try:
+        query_text = json.dumps({
+            "mode": "add_user",
+            "userid": userid,
+            "password": password,
+            "username": username,
+            "privilege": str(privilege),
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

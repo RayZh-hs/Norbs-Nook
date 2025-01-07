@@ -269,9 +269,10 @@ onMounted(async () => {
                             <n-scrollbar style="max-height: 50vh; min-width: 50vw;" trigger="none">
                                 <div v-for="(worker, i) in workerReportData" :key="i" class="worker-report-wrapper">
                                     <n-flex gap="1rem" align="center">
-                                        <n-avatar round>{{ worker.user_id[0].toUpperCase() }}</n-avatar>
+                                        <!-- {{worker}} -->
+                                        <n-avatar round>{{ worker.userid[0].toUpperCase() }}</n-avatar>
                                         <div class="message-text">
-                                            <h3 class="message-text__user-id">{{ worker.user_id }}</h3>
+                                            <h3 class="message-text__user-id">{{ worker.userid }}</h3>
                                             <p class="message-text__description">{{ worker.description }}</p>
                                         </div>
                                     </n-flex>

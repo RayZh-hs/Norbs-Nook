@@ -7,6 +7,10 @@
 #include "norb_string.hpp"
 #include "norb_blocklist.hpp"
 
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 // The using namespace here only imports such constants that the file needs, and thus is justified.
 using namespace norb::norbs_nook_constants::account_constants;
 
@@ -54,6 +58,22 @@ namespace norb {
         string<account_username_len> username{};
         int privilege = 0;
     };
+
+    inline void to_json(json &j, const Account &a) {
+        j = json{
+            {"userid", a.userid},
+            {"username", a.username},
+            {"hashed_password", a.hashed_password},
+            {"privilege", a.privilege}
+        };
+    }
+
+    inline void from_json(const json &j, Account &a) {
+        a.hashed_password = j.at("hashed_password").get<lld>();
+        a.privilege = j.at("privilege").get<int>();
+        a.userid = j.at("userid").get<std::string>();
+        a.username = j.at("username").get<std::string>();
+    }
 
     class AccountManager {
     public:
@@ -114,6 +134,14 @@ namespace norb {
             for (auto i : accounts) {
                 std::cout << i.first << "\t:\t" << i.second << '\n';
             }
+        }
+
+        [[nodiscard]] std::vector<Account> GetAllAccounts() const {
+            return account_list->valAsVector();
+        }
+
+        [[nodiscard]] std::vector<Account> GetLoginStack() const {
+            return login_stack;
         }
 
     private:

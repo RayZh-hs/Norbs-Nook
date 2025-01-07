@@ -106,7 +106,7 @@ const handleSubmitSignin = async () => {
         if (!isValid) return;
 
         // TODO: Get this real api call working!
-        const response = await axios.post('http://localhost:5000/api/login', { user_id: signinForm.userid, password: signinForm.password });
+        const response = await axios.post('http://localhost:5000/api/login', { userid: signinForm.userid, password: signinForm.password });
         console.log("Got response: ", response);
         // if (response.success) {
         //     message.success('Sign in successful!');
@@ -131,7 +131,7 @@ const handleSubmitRegister = async () => {
         const isValid = await registerFormRef.value?.validate();
         if (!isValid) return;
 
-        const response = await axios.post('http://localhost:5000/api/register', { user_id: registerForm.userid, password: registerForm.password, username: registerForm.username });
+        const response = await axios.post('http://localhost:5000/api/register', { userid: registerForm.userid, password: registerForm.password, username: registerForm.username });
         if (response.data.status == 'success') {
             message.success('Welcome to the community!');
             message.success('Please log in once more to continue');

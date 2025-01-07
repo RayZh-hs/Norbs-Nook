@@ -192,3 +192,28 @@ button:focus-visible {
 .u-mv-up-2 {
   margin-top: -2em;
 }
+
+/* Fixes for the default n-timeline alignment */
+.n-timeline.n-timeline--horizontal {
+  display: flex;
+  justify-content: center;
+}
+/* Minor adjustments to the timeline texts */
+.n-timeline-item-content__title {
+  font-size: 0.8rem !important;
+  font-weight: 200 !important;
+  text-transform: lowercase;
+}
+.n-timeline-item-timeline__circle,
+.n-timeline-item-timeline__icon {
+  transition: all 0.3s !important;
+}
+.n-timeline-item-timeline__circle:hover,
+.n-timeline-item-timeline__icon:hover {
+  transform: scale(1.2);
+}
+
+/* Remove the white border from all n-buttons */
+.n-button {
+  outline: none !important;
+}

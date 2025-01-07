@@ -8,25 +8,27 @@
                             {{ account_info.content.username }} \
                             <div style="display: inline-flex; gap:1rem;">
                                 <n-button v-if="account_info.content.privilege == 1" text style="outline: none;"
-                                    :style="{ 'font-size': action_font_size }">
+                                    :style="{ 'font-size': action_font_size }"
+                                    @click="showChangePassword = true">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
                                                 <Edit />
                                             </n-icon>
                                         </template>
-                                        Account Settings
+                                        Change Password
                                     </n-tooltip>
                                 </n-button>
                                 <n-button v-if="account_info.content.privilege >= 3" text style="outline: none;"
-                                    :style="{ 'font-size': action_font_size }">
+                                    :style="{ 'font-size': action_font_size }"
+                                    @click="router.push('account-management')">
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
                                                 <User />
                                             </n-icon>
                                         </template>
-                                        User Management
+                                        Account Management
                                     </n-tooltip>
                                     <!-- <n-icon>
                                         <User />
@@ -79,6 +81,14 @@
                         @modify="showAddBook = false; message.success('Book added!')"
                     />
                 </n-modal>
+                <n-modal v-model:show="showChangePassword">
+                    <PasswordEditCard cardTitle="Change Password"
+                        :account="account_info.content"
+                        :privilege="account_info.content.privilege"
+                        @close="showChangePassword = false"
+                        @success="showChangePassword = false"
+                    />
+                </n-modal>
             </div>
             <div v-else>
                 <p>Loading account information...</p>
@@ -98,16 +108,18 @@
 </style>
 
 <script lang="ts" setup>
-import { ref, onMounted, watchEffect } from 'vue';
+// @ts-ignore
+import { ref, onMounted, watchEffect, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Import useRoute and useRouter
 import axios from 'axios';
 import { useMessage } from 'naive-ui';
-import { reactive } from 'vue';
 import { SearchOutline } from '@vicons/ionicons5';
 import { Edit, User, NotebookReference, Catalog, Power, ChartHistogram } from '@vicons/carbon';
 
+// @ts-ignore
 import SearchBar from '../components/SearchBar.vue';
 import BookEditCard from '../components/BookEditCard.vue';
+import PasswordEditCard from '../components/PasswordEditCard.vue';
 
 const message = useMessage();
 const account_info = ref({ username: 'Guest' });
@@ -122,6 +134,8 @@ const showAddBook = ref(false);
 const handleNewBook = () => {
     showAddBook.value = true;
 };
+
+const showChangePassword = ref(false);
 
 const fetchAccountInfo = async () => {
     try {

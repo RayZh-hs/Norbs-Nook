@@ -89,6 +89,10 @@ namespace norb {
         virtual void DebugPrintBookkeeperInfo() = 0;
 
         virtual Account GetActiveAccount() = 0;
+
+        virtual std::vector<Account> GetAllAccounts() = 0;
+
+        virtual std::vector<Account> GetLoginStack() = 0;
     };
 
     // This class implements the interface.
@@ -158,6 +162,10 @@ namespace norb {
         void DebugPrintBookkeeperInfo() override;
 
         Account GetActiveAccount() override;
+
+        std::vector<Account> GetAllAccounts() override;
+
+        std::vector<Account> GetLoginStack() override;
 
     private:
         std::unique_ptr<GlobalAssetManager> manager;

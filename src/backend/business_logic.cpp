@@ -135,9 +135,12 @@ namespace norb {
             default:
                 throw UtilityException("PRIVILEGE UNDEFINED ERROR");
         }
+        if (GetActiveAccount().privilege <= num_p) {
+            throw UtilityException("UNDERPRIVILEGED ERROR");
+        }
         if (!manager->account_manager->UserAdd(user_id, password, num_p, username)) {
             manager->logger->Log(level::WARNING, "Failed to add user.");
-            throw UtilityException("PASSWORD FAILURE");
+            throw UtilityException("USER-ID COLLISION FAILURE");
         } else {
             auto user = manager->account_manager->GetActiveUser();
             if (user.privilege == 3) {
@@ -323,6 +326,14 @@ namespace norb {
 
     Account BusinessLogicImplement::GetActiveAccount() {
         return manager->account_manager->GetActiveUser();
+    }
+
+    std::vector<Account> BusinessLogicImplement::GetAllAccounts() {
+        return manager->account_manager->GetAllAccounts();
+    }
+
+    std::vector<Account> BusinessLogicImplement::GetLoginStack() {
+        return manager->account_manager->GetLoginStack();
     }
 
 
