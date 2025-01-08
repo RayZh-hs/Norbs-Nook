@@ -292,30 +292,38 @@ namespace norb {
 
     void GraphicalUserInterface::Run() {
         freopen("./generated/logs/cerr-capture.log", "w", stderr);
-        // Append some demo books
         interface->SwitchUser("root", "sjtu");
-        interface->Select("000");
-        interface->Modify({
-            "978-0553808049", "A Song of Ice and Fire", "George R. R. Martin", "fantasy|American", 5, 24.26
-        });
-        interface->Select("000");
-        interface->Modify({
-            "978-0441172719", "Dune", "Frank Herbert", "sci-fi|fantasy|demo", 10, 12.5
-        });
-        interface->Select("000");
-        interface->Modify({
-            "000-00000", "A Guide to Redstone", "Norb", "demo|minecraft|gaming", 100, 15.3
-        });
-        interface->Select("000");
-        interface->Modify({
-            "000-00001", "How to build a redstone computer", "Matbattwings", "demo|minecraft|gaming", 1, 21.6
-        });
-        // Add some demo purchases and imports
-        interface->Buy("978-0553808049", 2);
-        interface->Buy("000-00000", 7);
-        interface->Select("000-00001");
-        interface->Import(10, 21.36);
-        interface->Buy("000-00001", 1);
+        if (interface->FindAll().empty()) {
+            // This is the first boot. Sample books and accounts will be added.
+            // Append some demo books
+            interface->Select("000");
+            interface->Modify({
+                "978-0553808049", "A Song of Ice and Fire", "George R. R. Martin", "fantasy|American", 5, 24.26
+            });
+            interface->Select("000");
+            interface->Modify({
+                "978-0441172719", "Dune", "Frank Herbert", "sci-fi|fantasy|demo", 10, 12.5
+            });
+            interface->Select("000");
+            interface->Modify({
+                "000-00000", "A Guide to Redstone", "Norb", "demo|minecraft|gaming", 100, 15.3
+            });
+            interface->Select("000");
+            interface->Modify({
+                "000-00001", "How to build a redstone computer", "Matbattwings", "demo|minecraft|gaming", 1, 21.6
+            });
+            // Add some demo purchases and imports
+            interface->Buy("978-0553808049", 2);
+            interface->Buy("000-00000", 7);
+            interface->Select("000-00001");
+            interface->Import(10, 21.36);
+            interface->Buy("000-00001", 1);
+            // Add a demo employee and customers
+            interface->UserAdd("norb", "mc", "3", "Norb");
+            interface->UserAdd("steve", "mc", "1", "Steve");
+            interface->UserAdd("alex", "mc", "1", "Alex");
+        }
+        // Logout to Guest
         interface->Logout();
         while (true) {
             try {

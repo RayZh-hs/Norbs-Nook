@@ -220,6 +220,8 @@ const handleExit = async () => {
                 const response = await axios.post('http://localhost:5000/api/shutdown');
                 if (response.data.status == 'success') {
                     message.success('Server shutdown successfully');
+                    // Clear all router history
+                    router.replace('server-down')
                 } else {
                     message.error('Failed to shutdown server');
                 }

@@ -6,6 +6,7 @@ import Dashboard from './views/Dashboard.vue'
 import Books from './views/Books.vue'
 import History from './views/History.vue'
 import AccountManagement from './views/AccountManagement.vue'
+import ServerDown from './views/ServerDown.vue'
 
 const routes = [
     {path: '/', component: WelcomeView},
@@ -13,7 +14,8 @@ const routes = [
     {path: '/dashboard', component: Dashboard},
     {path: '/books', component: Books},
     {path: '/history', component: History},
-    {path: '/account-management', component: AccountManagement}
+    {path: '/account-management', component: AccountManagement},
+    {path: '/server-down', component: ServerDown}
 ]
 
 export default routes
