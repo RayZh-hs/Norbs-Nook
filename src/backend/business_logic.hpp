@@ -45,7 +45,8 @@ namespace norb {
 
         virtual void Password(const std::string &user_id, const std::string &password) = 0;
 
-        virtual void Password(const std::string &user_id, const std::string &current_password, const std::string &password) = 0;
+        virtual void Password(const std::string &user_id, const std::string &current_password,
+                              const std::string &password) = 0;
 
         virtual void UserAdd(const std::string &user_id, const std::string &password, const std::string &privilege,
                              const std::string &username) = 0;
@@ -119,9 +120,11 @@ namespace norb {
 
         void Password(const std::string &user_id, const std::string &password) override;
 
-        void Password(const std::string &user_id, const std::string &current_password, const std::string &password) override;
+        void Password(const std::string &user_id, const std::string &current_password,
+                      const std::string &password) override;
 
-        void UserAdd(const std::string &user_id, const std::string &password, const std::string &privilege, const std::string &username) override;
+        void UserAdd(const std::string &user_id, const std::string &password, const std::string &privilege,
+                     const std::string &username) override;
 
         void Delete(const std::string &user_id) override;
 

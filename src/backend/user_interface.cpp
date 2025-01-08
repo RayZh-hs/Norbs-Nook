@@ -470,8 +470,7 @@ namespace norb {
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "logout") {
+                } else if (mode == "logout") {
                     interface->Logout();
                     const bool moreUsers = interface->GetActiveAccount().privilege != 0;
                     std::cout << json::object({
@@ -479,8 +478,7 @@ namespace norb {
                         {"more_users", moreUsers}
                     }) << '\n';
                     std::cerr << "[INFO] Logout Successful" << '\n';
-                }
-                else if (mode == "get_transactions") {
+                } else if (mode == "get_transactions") {
                     try {
                         const auto transactions = interface->ReportFinance();
                         std::cout << json::object({
@@ -488,16 +486,14 @@ namespace norb {
                             {"content", transactions}
                         }) << '\n';
                         std::cerr << "[INFO] GetTransaction successful" << '\n';
-                    }
-                    catch (UtilityException &e) {
+                    } catch (UtilityException &e) {
                         std::cout << json::object({
                             {"status", "failure"},
                             {"message", "You are not authorized to perform the query!"}
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "get_worker_report") {
+                } else if (mode == "get_worker_report") {
                     try {
                         const auto report = interface->ReportEmployee();
                         std::cout << json::object({
@@ -505,16 +501,14 @@ namespace norb {
                             {"content", report}
                         }) << '\n';
                         std::cerr << "[INFO] GetWorkerReport successful" << '\n';
-                    }
-                    catch (UtilityException &e) {
+                    } catch (UtilityException &e) {
                         std::cout << json::object({
                             {"status", "failure"},
                             {"message", "You are not authorized to perform the query!"}
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "get_logs") {
+                } else if (mode == "get_logs") {
                     try {
                         const auto report = interface->GetLog();
                         std::cout << json::object({
@@ -522,68 +516,59 @@ namespace norb {
                             {"content", report}
                         }) << '\n';
                         std::cerr << "[INFO] GetWorkerReport successful" << '\n';
-                    }
-                    catch (UtilityException &e) {
+                    } catch (UtilityException &e) {
                         std::cout << json::object({
                             {"status", "failure"},
                             {"message", "You are not authorized to perform the query!"}
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "get_all_accounts") {
+                } else if (mode == "get_all_accounts") {
                     const auto report = interface->GetAllAccounts();
                     std::cout << json::object({
                         {"status", "success"},
                         {"content", report}
                     }) << '\n';
                     std::cerr << "[INFO] GetWorkerReport successful" << '\n';
-                }
-                else if (mode == "get_login_stack") {
+                } else if (mode == "get_login_stack") {
                     const auto report = interface->GetLoginStack();
                     std::cout << json::object({
                         {"status", "success"},
                         {"content", report}
                     }) << '\n';
                     std::cerr << "[INFO] GetWorkerReport successful" << '\n';
-                }
-                else if (mode == "password") {
+                } else if (mode == "password") {
                     try {
                         if (input["old_password"].empty()) {
                             interface->Password(input["userid"], input["new_password"]);
                         } else {
-                            interface->Password(input["userid"], input["old_password"],input["new_password"]);
+                            interface->Password(input["userid"], input["old_password"], input["new_password"]);
                         }
                         std::cout << json::object({
                             {"status", "success"},
                         }) << '\n';
                         std::cerr << "[INFO] Password successful" << '\n';
-                    }
-                    catch (UtilityException &e) {
+                    } catch (UtilityException &e) {
                         std::cout << json::object({
                             {"status", "failure"},
                             {"message", "Wrong old password!"}
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "add_user") {
+                } else if (mode == "add_user") {
                     try {
                         interface->UserAdd(input["userid"], input["password"], input["privilege"], input["username"]);
                         std::cout << json::object({
                             {"status", "success"}
                         }) << '\n';
                         std::cerr << "[INFO] AddUser successful" << '\n';
-                    }
-                    catch (UtilityException &e) {
+                    } catch (UtilityException &e) {
                         std::string message{};
                         if (std::string(e.what()) == "UNDERPRIVILEGED ERROR") {
                             message = "You are not authorized to create this user!";
-                        }
-                        else if (std::string(e.what()) == "USER-ID COLLISION FAILURE") {
+                        } else if (std::string(e.what()) == "USER-ID COLLISION FAILURE") {
                             message = "There is already a user with this user-id!";
-                        }
-                        else {
+                        } else {
                             message = "Internal Utility Exception occurred";
                         }
                         std::cout << json::object({
@@ -592,8 +577,7 @@ namespace norb {
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "delete_user") {
+                } else if (mode == "delete_user") {
                     try {
                         if (interface->GetActiveAccount().privilege < 7) {
                             throw UtilityException("UNDERPRIVILEGED ERROR");
@@ -603,13 +587,11 @@ namespace norb {
                             {"status", "success"}
                         }) << '\n';
                         std::cerr << "[INFO] DeleteUser successful" << '\n';
-                    }
-                    catch (UtilityException &e) {
+                    } catch (UtilityException &e) {
                         std::string message;
                         if (std::string(e.what()) == "UNDERPRIVILEGED ERROR") {
                             message = "Only admins can delete users!";
-                        }
-                        else {
+                        } else {
                             message = "User is present in login stack. Log out first!";
                         }
                         std::cout << json::object({
@@ -618,11 +600,10 @@ namespace norb {
                         }) << '\n';
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
-                }
-                else if (mode == "exit") {
+                } else if (mode == "exit") {
                     std::cout << json::object({
-                            {"status", "success"}
-                        }) << '\n';
+                        {"status", "success"}
+                    }) << '\n';
                     interface->Exit();
                 }
             } catch (QuitUtilityException &) {

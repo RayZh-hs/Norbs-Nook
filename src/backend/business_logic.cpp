@@ -22,7 +22,8 @@ namespace norb {
         const bool success = manager->account_manager->SwitchUser(user_id);
         if (success) {
             manager->logger->Log(level::INFO, "SwitchUser successful!");
-            (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() << Logger::EOS;
+            (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() <<
+                    Logger::EOS;
             if (user.privilege == 3) {
                 manager->action_manager->RegisterAction({
                     user.username,
@@ -38,12 +39,14 @@ namespace norb {
 
     void BusinessLogicImplement::SwitchUser(const std::string &user_id, const std::string &password) {
         // manager->logger->Log(level::INFO, std::string("Called SwitchUser: ") + user_id + " with password " + password);
-        *(manager->logger) << level::DEBUG << "Called SwitchUser: " << user_id << " with password #" << hash(password) << Logger::EOS;
+        *(manager->logger) << level::DEBUG << "Called SwitchUser: " << user_id << " with password #" << hash(password)
+                << Logger::EOS;
         const auto user = manager->account_manager->GetActiveUser();
         const bool success = manager->account_manager->SwitchUser(user_id, password);
         if (success) {
             manager->logger->Log(level::INFO, "SwitchUser successful!");
-            (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() << Logger::EOS;
+            (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() <<
+                    Logger::EOS;
             if (user.privilege == 3) {
                 manager->action_manager->RegisterAction({
                     user.username,
@@ -70,7 +73,8 @@ namespace norb {
         const bool success = manager->account_manager->Logout();
         if (success) {
             manager->logger->Log(level::INFO, "Logout Successful.");
-            (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() << Logger::EOS;
+            (*manager->logger) << level::DEBUG << "Current user: " << manager->account_manager->GetActiveUser() <<
+                    Logger::EOS;
             if (user.privilege == 3) {
                 manager->action_manager->RegisterAction({
                     user.username, "logged out"
@@ -335,6 +339,4 @@ namespace norb {
     std::vector<Account> BusinessLogicImplement::GetLoginStack() {
         return manager->account_manager->GetLoginStack();
     }
-
-
 }
