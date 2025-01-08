@@ -61,10 +61,22 @@
                                     <n-tooltip>
                                         <template #trigger>
                                             <n-icon>
-                                                <Power />
+                                                <ExitOutline />
                                             </n-icon>
                                         </template>
                                         Logout
+                                    </n-tooltip>
+                                </n-button>
+                                <n-button v-if="account_info.content.privilege === 7" text style="outline: none;" type="error"
+                                    :style="{ 'font-size': action_font_size }"
+                                    @click="handleExit">
+                                    <n-tooltip>
+                                        <template #trigger>
+                                            <n-icon>
+                                                <Power />
+                                            </n-icon>
+                                        </template>
+                                        Shutdown
                                     </n-tooltip>
                                 </n-button>
                             </div>
@@ -112,8 +124,8 @@
 import { ref, onMounted, watchEffect, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Import useRoute and useRouter
 import axios from 'axios';
-import { useMessage } from 'naive-ui';
-import { SearchOutline } from '@vicons/ionicons5';
+import { useMessage, useDialog } from 'naive-ui';
+import { SearchOutline, ExitOutline } from '@vicons/ionicons5';
 import { Edit, User, NotebookReference, Catalog, Power, ChartHistogram } from '@vicons/carbon';
 
 // @ts-ignore
@@ -122,6 +134,7 @@ import BookEditCard from '../components/BookEditCard.vue';
 import PasswordEditCard from '../components/PasswordEditCard.vue';
 
 const message = useMessage();
+const dialog = useDialog();
 const account_info = ref({ username: 'Guest' });
 let cancelTokenSource: any = null;
 
@@ -193,6 +206,29 @@ const handleLogout = async () => {
         console.error("Error logging out:", error);
         message.error('Failed to logout');
     }
+}
+
+const handleExit = async () => {
+    // First display the dialog:
+    dialog.warning({
+        title: 'Shutdown',
+        content: 'Are you sure you want to shutdown the server? After doing so you will not be able to connect to the backend and you will need to reboot it manually.',
+        positiveText: 'Yes',
+        negativeText: 'No',
+        onPositiveClick: async () => {
+            try {
+                const response = await axios.post('http://localhost:5000/api/shutdown');
+                if (response.data.status == 'success') {
+                    message.success('Server shutdown successfully');
+                } else {
+                    message.error('Failed to shutdown server');
+                }
+            } catch (error) {
+                console.error("Error shutting down server:", error);
+                message.error('Failed to shutdown server');
+            }
+        }
+    })
 }
 
 </script>

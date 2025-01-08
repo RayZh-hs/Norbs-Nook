@@ -611,6 +611,12 @@ namespace norb {
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
                 }
+                else if (mode == "exit") {
+                    std::cout << json::object({
+                            {"status", "success"}
+                        }) << '\n';
+                    interface->Exit();
+                }
             } catch (QuitUtilityException &) {
                 return;
             }

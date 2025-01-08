@@ -3,6 +3,7 @@ import subprocess
 import json
 from flask_cors import CORS
 import logging
+import time, threading, os
 
 from runtime import Runtime
 from public import *
@@ -382,6 +383,35 @@ def delete_user():
         })
         response = runtime.query(query_text)
         return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+@app.route("/api/shutdown", methods=["POST"])
+def shutdown():
+    logger.log(logging.INFO, f"On Shutdown()")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    try:
+        query_text = json.dumps({
+            "mode": "exit",
+        })
+        response = runtime.query(query_text)
+        response = json.loads(response)
+        
+        if (response["status"] == "success"):
+            # Manual reset
+            runtime.process = None
+            
+            # This is used to perform the shutdown after the return statement
+            def shutdown_server(secs: int):
+                logger.info(f"Shutting down server in {secs} secs...")
+                time.sleep(secs)
+                os._exit(0) # This is used to force the server to shutdown from one thread
+            shutdown_watchdog = threading.Thread(target=shutdown_server, args=(5,))
+            shutdown_watchdog.start()
+            
+        return jsonify(response)
     except Exception as e:
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
