@@ -8,21 +8,23 @@ import { ChevronLeft, ChevronRight } from '@vicons/carbon';
 
 <template>
   <n-config-provider :theme="darkTheme">
-    <n-message-provider>
-      <n-modal-provider>
-        <main class="container">
-          <!-- <div class="left-middle-wrapper a-fade-in" style="margin: 2rem; transform: translateY(-2rem);" v-if="$route.path !== '/'">
+    <n-dialog-provider>
+      <n-message-provider>
+        <n-modal-provider>
+          <main class="container">
+            <!-- <div class="left-middle-wrapper a-fade-in" style="margin: 2rem; transform: translateY(-2rem);" v-if="$route.path !== '/'">
           <n-button style="font-size: 2rem; outline: none;" text @click="$router.go(-1)">
             <n-icon>
               <ChevronLeft />
             </n-icon>
           </n-button>
         </div> -->
-          <RouterView />
-          <p class="footer">Norb's Nook @ 2024. Made with ❤️ by Norb</p>
-        </main>
-      </n-modal-provider>
-    </n-message-provider>
+            <RouterView />
+            <p class="footer">Norb's Nook @ 2024. Made with ❤️ by Norb</p>
+          </main>
+        </n-modal-provider>
+      </n-message-provider>
+    </n-dialog-provider>
   </n-config-provider>
 </template>
 

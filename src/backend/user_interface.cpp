@@ -585,6 +585,32 @@ namespace norb {
                         std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
                     }
                 }
+                else if (mode == "delete_user") {
+                    try {
+                        if (interface->GetActiveAccount().privilege < 7) {
+                            throw UtilityException("UNDERPRIVILEGED ERROR");
+                        }
+                        interface->Delete(input["userid"]);
+                        std::cout << json::object({
+                            {"status", "success"}
+                        }) << '\n';
+                        std::cerr << "[INFO] DeleteUser successful" << '\n';
+                    }
+                    catch (UtilityException &e) {
+                        std::string message;
+                        if (std::string(e.what()) == "UNDERPRIVILEGED ERROR") {
+                            message = "Only admins can delete users!";
+                        }
+                        else {
+                            message = "User is present in login stack. Log out first!";
+                        }
+                        std::cout << json::object({
+                            {"status", "failure"},
+                            {"message", message}
+                        }) << '\n';
+                        std::cerr << "[ERROR] Caught exception " + std::string(e.what()) << '\n';
+                    }
+                }
             } catch (QuitUtilityException &) {
                 return;
             }

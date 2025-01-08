@@ -368,6 +368,25 @@ def add_user():
         logger.log(logging.ERROR, e)
         return jsonify({"status": "error", "message": "internal error occurred"})
 
+@app.route("/api/delete_user", methods=["POST"])
+def delete_user():
+    data = request.json
+    logger.log(logging.INFO, f"On DeleteUser(): Received data: {data}")
+    if runtime.process is None:
+        raise RuntimeError("Runtime is not running.")
+    userid = data.get('userid')
+    try:
+        query_text = json.dumps({
+            "mode": "delete_user",
+            "userid": userid,
+        })
+        response = runtime.query(query_text)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        logger.log(logging.ERROR, e)
+        return jsonify({"status": "error", "message": "internal error occurred"})
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     runtime.start()

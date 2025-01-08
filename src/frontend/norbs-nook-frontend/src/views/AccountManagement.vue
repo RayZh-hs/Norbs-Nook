@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import { UserAvatar, GroupAccount, CircleFilled, Edit, AddAlt } from '@vicons/carbon';
-import { Power, UserFollow, Close, StatusChange } from '@vicons/carbon';
+import { Power, UserFollow, Close, StatusChange, Delete } from '@vicons/carbon';
 import axios from 'axios';
 // @ts-ignore  < false alarm by vscode >
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useDialog, useMessage } from 'naive-ui';
 import PasswordEditCard from '../components/PasswordEditCard.vue';
 import AddAccountCard from '../components/AddAccountCard.vue';
 
 const router = useRouter();
+const dialog = useDialog();
+const message = useMessage();
 
 const user_count = ref(0);
 const login_stack_size = ref(0);
@@ -26,7 +29,7 @@ const fetchAccountInfo = async () => {
         user_count.value = accounts.value.length;
     }
     else {
-        console.error(accountsResponse.data.message);
+        message.error(accountsResponse.data.message);
     }
     const loginStackResponse = await axios.post("http://localhost:5000/api/get_login_stack");
     if (loginStackResponse.data.status === "success") {
@@ -34,7 +37,7 @@ const fetchAccountInfo = async () => {
         login_stack_size.value = loginStack.value.length;
     }
     else {
-        console.error(loginStackResponse.data.message);
+        message.error(loginStackResponse.data.message);
     }
 };
 
@@ -67,6 +70,27 @@ const mapPrivilegeToName = (privilege: number) => {
             return "User";
     }
 };
+
+const handleDelete = () => {
+    dialog.warning({
+        title: "Delete Account",
+        content: "Are you sure you want to delete this user? You cannot undo this action!",
+        positiveText: "Confirm",
+        negativeText: "Cancel",
+        onPositiveClick: async () => {
+            const response = await axios.post("http://localhost:5000/api/delete_user", {
+                userid: accounts.value[activeUser.value].userid
+            });
+            if (response.data.status === "success") {
+                fetchAccountInfo();
+                message.success("User deleted successfully!");
+            }
+            else {
+                message.error(response.data.message);
+            }
+        }
+    })
+}
 
 onMounted(async () => {
     console.log("Account Management Mounted");
@@ -178,6 +202,20 @@ onMounted(async () => {
                             </n-button>
                         </template>
                         Edit password
+                    </n-tooltip>
+                    <n-tooltip trigger="hover" placement="right"
+                    v-if="loginStack[login_stack_size - 1]?.privilege === 7"
+                    :disabled="account.privilege === 7">
+                        <template #trigger>
+                            <n-button text class="account-card__delete-btn" type="error"
+                                @click="activeUser = i; handleDelete();"
+                                :disabled="account.privilege === 7">
+                                <n-icon size="large">
+                                    <Delete />
+                                </n-icon>
+                            </n-button>
+                        </template>
+                        Delete Account
                     </n-tooltip>
                 </div>
                 <!-- Then there is an ADD button for AddUser -->
