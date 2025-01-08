@@ -17,6 +17,7 @@ import {
 import { Bar } from 'vue-chartjs';
 import axios from 'axios';
 import { Debug, Information, WarningAlt, ErrorOutline } from '@vicons/carbon';
+import { isSlotEmpty } from 'naive-ui/es/_utils';
 
 // Transaction Related Data
 
@@ -267,7 +268,8 @@ onMounted(async () => {
                                 Worker Report
                             </h1>
                             <n-scrollbar style="max-height: 50vh; min-width: 50vw;" trigger="none">
-                                <div v-for="(worker, i) in workerReportData" :key="i" class="worker-report-wrapper">
+                                <!-- The filter is required because in strange cases, the action system will register null entries, breaking the .toUpperCase function -->
+                                <div v-for="(worker, i) in workerReportData.filter((item:any)=>{return item.userid})" :key="i" class="worker-report-wrapper">
                                     <n-flex gap="1rem" align="center">
                                         <!-- {{worker}} -->
                                         <n-avatar round>{{ worker.userid[0].toUpperCase() }}</n-avatar>
